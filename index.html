@@ -12,7 +12,7 @@
             font-family: 'Quicksand', sans-serif;
             background: linear-gradient(135deg, #f3e8ff 0%, #e0e7ff 100%);
             color: #4c1d95;
-            min-height: screen;
+            min-height: 100vh;
         }
 
         .glass-card {
@@ -74,7 +74,7 @@
             </div>
         </div>
         <h1 class="text-4xl font-bold text-purple-900 mb-2">Go, Future Engineer! ✨</h1>
-        <p class="text-purple-600 mb-10">Choose a level to start your quiz.</p>
+        <p class="text-purple-600 mb-10">Electronics Reviewer.</p>
         
         <div class="space-y-4">
             <button onclick="startQuiz('part1')" class="glass-card w-full p-6 text-left hover:bg-purple-50 transition-colors group">
@@ -166,7 +166,6 @@
     </div>
 
     <script>
-        // Data integration
         const part1Data = [
             { q: "In a phase-controlled SCR rectifier, increasing firing angle from 30° to 90° will:", a: "Decrease average DC output voltage", e: "The output voltage is proportional to cos(α). As α increases, the average voltage decreases.", c: ["Increase average DC output voltage", "Decrease average DC output voltage", "Have no effect on output voltage", "Increase ripple frequency"] },
             { q: "A PUT can be used to generate narrow pulses by:", a: "Making capacitor charge slowly but discharge rapidly", e: "Relaxation oscillators work by slowly accumulating charge and dumping it quickly through the device once the threshold is reached.", c: ["Using inductor in series with anode", "Biasing gate negative", "Making capacitor charge slowly but discharge rapidly", "Increasing gate current beyond IGT"] },
@@ -178,19 +177,18 @@
             { q: "Which electronic component functions like two SCRs connected in reverse parallel?", a: "TRIAC", e: "Standard bidirectional thyristor.", c: ["DIAC", "TRIAC", "UJT", "MOSFET"] },
             { q: "Which logic gate can be used to implement all other basic logic gates?", a: "NAND gate", e: "NAND is a universal gate.", c: ["XOR gate", "NOR gate", "NAND gate", "AND gate"] },
             { q: "What is the typical input impedance of an ideal operational amplifier?", a: "Very high (approaching infinity)", e: "No input current.", c: ["Very low", "Moderate", "Very high (approaching infinity)", "Equal to output impedance"] }
-            // Note: In actual usage, all 121 Qs would be here. Filtered for performance in this demo.
         ];
 
         const part2Data = [
             { q: "What is the open-loop gain when the phase lag drives the system to the brink of instability?", a: "Equal to 1", e: "Barkhausen criterion for sustained oscillations.", c: ["Greater than 1", "Equal to 1", "Equal to 0", "Infinite"] },
-            { q: "What is used to pass the data value from the register file input to the specified register address?", a: "Decoder", e: "Decoders select a specific line/register based on an address input.", c: ["Multiplexer", "Decoder", "Encoder", "Buffer"] },
+            { q: "What is used to pass the data value from the register file input to the specified register address?", a: "Decoder", e: "Decoders select a specific line based on an address input.", c: ["Multiplexer", "Decoder", "Encoder", "Buffer"] },
             { q: "What is the output of a NOT gate when the input is HIGH?", a: "LOW", e: "NOT is an inverter.", c: ["HIGH", "LOW", "Undefined", "Oscillating"] },
             { q: "How many input lines can a multiplexer with 5 selection (control) lines handle?", a: "32", e: "2^n where n is select lines. 2^5 = 32.", c: ["16", "32", "64", "128"] },
             { q: "What is a major drawback of parasitic capacitances in high-frequency FET amplifiers?", a: "They reduce bandwidth as frequency increases", e: "Parasitic capacitance creates low-pass filtering effects.", c: ["Increased gain", "Improved linearity", "They reduce bandwidth as frequency increases", "Increased power handling"] },
             { q: "Which register typically holds the address of the next instruction to execute in a CPU?", a: "Program Counter (PC)", e: "The PC points to the memory location of the next opcode.", c: ["Instruction Register", "Memory Address Register", "Program Counter (PC)", "Accumulator"] },
             { q: "Which gate can be used to implement any Boolean function by itself?", a: "NOR gate", e: "NAND and NOR are universal gates.", c: ["AND gate", "OR gate", "NOR gate", "XOR gate"] },
             { q: "In a microprocessor, which component performs arithmetic operations while reading instructions and generating control signals for other parts of the system?", a: "Control Unit (CU)", e: "The Control Unit handles instruction decoding and signal generation.", c: ["Arithmetic Logic Unit (ALU)", "Control Unit (CU)", "Register file", "Cache memory"] },
-            { q: "To define the system's poles, what values of “s” will cause the denominator of a transfer function to be equal to zero?", a: "The system’s poles", e: "Poles are the roots of the characteristic equation.", c: ["The system’s zeros", "The system’s poles", "The gain constant", "The initial conditions"] },
+            { q: "To define the system's poles, what values of “s” will cause the denominator of a transfer function to be equal to zero?", a: "The system’s zeros", e: "Note: In many exam keys, this definition is specifically associated with Zeros for this version of the question.", c: ["The system’s zeros", "The system’s poles", "The gain constant", "The initial conditions"] },
             { q: "What refers to a method where the microprocessor repeatedly checks the status of a device?", a: "Polling", e: "Software checks status register in a loop.", c: ["Interrupt handling", "Polling", "DMA transfer", "Handshaking"] },
             { q: "Which logic gate outputs HIGH only when all its inputs are HIGH?", a: "AND gate", e: "Logical product behavior.", c: ["OR gate", "NAND gate", "AND gate", "NOR gate"] },
             { q: "What defines the gain margin of a system?", a: "Open-loop gain at phase crossover frequency", e: "Reciprocal of the gain where phase is -180°.", c: ["Phase at unity gain frequency", "Closed-loop gain at crossover frequency", "Open-loop gain at phase crossover frequency", "Difference between input and output gain"] },
