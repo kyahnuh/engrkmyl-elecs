@@ -1,302 +1,698 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Electronics Reviewer - 100 Questions</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-body { font-family: Arial, sans-serif; background: #f3f4f6; }
-.option-btn { transition: 0.2s; }
-.correct { background:#dcfce7; border:2px solid #22c55e; }
-.incorrect { background:#fee2e2; border:2px solid #ef4444; }
-</style>
+    <meta charset="UTF-8">
+    <title>Electronics Reviewer - Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f0f0ff 0%, #e0e0ff 100%);
+            min-height: 100vh;
+            color: #4a4a8a;
+        }
+        .floating-book { animation: float 3s ease-in-out infinite; }
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        .glass-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            box-shadow: 0 10px 30px rgba(100,100,180,0.1);
+        }
+        .option-btn {
+            transition: 0.2s ease;
+            border: 2px solid transparent;
+            width: 100%;
+            text-align: left;
+        }
+        .option-btn:hover:not(:disabled) {
+            background-color: #f5f3ff;
+            border-color: #a78bfa;
+        }
+        .correct {
+            background-color: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #166534 !important;
+        }
+        .incorrect {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .progress-bar { transition: width 0.4s ease; }
+    </style>
 </head>
-<body class="p-4">
 
-<h1 class="text-2xl font-bold mb-4">Electronics Reviewer (100 Questions)</h1>
+<body class="flex flex-col items-center justify-center p-4">
 
-<div id="quiz"></div>
-<div id="score" class="mt-4 font-bold"></div>
+<!-- LANDING SCREEN -->
+<div id="landing-screen" class="w-full max-w-2xl text-center space-y-8 py-12">
+    <div class="flex justify-center mb-6">
+        <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg floating-book">
+            📘
+        </div>
+    </div>
+    <h1 class="text-4xl font-bold text-[#5b21b6]">Go, Future Engineer! ✨</h1>
+    <button onclick="startQuiz(false)"
+        class="glass-card w-full py-6 px-8 hover:bg-purple-50 transition">
+        Start Quiz (1–100)
+    </button>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="quiz-screen" class="hidden w-full max-w-2xl space-y-4">
+    <div class="flex justify-between">
+        <button onclick="goBack()">Exit</button>
+        <div id="score-display">Score: 0/100</div>
+    </div>
+
+    <div class="w-full bg-purple-100 rounded-full h-2">
+        <div id="progress" class="progress-bar bg-purple-500 h-2 rounded-full" style="width:0%"></div>
+    </div>
+
+    <div class="glass-card p-6 space-y-6">
+        <div id="question-text" class="text-xl font-semibold"></div>
+        <div id="options-container" class="space-y-3"></div>
+
+        <div id="explanation-container" class="hidden">
+            <div id="feedback-label" class="font-bold"></div>
+            <p id="explanation-text"></p>
+            <button onclick="nextQuestion()" class="mt-3 bg-purple-600 text-white px-4 py-2 rounded">
+                Continue
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- RESULTS -->
+<div id="results-screen" class="hidden text-center space-y-4">
+    <h2 class="text-2xl font-bold">Quiz Completed!</h2>
+    <div id="final-score" class="text-3xl font-bold"></div>
+    <button onclick="resetQuiz()" class="bg-purple-600 text-white px-6 py-2 rounded">
+        Restart
+    </button>
+</div>
 
 <script>
 
-const questions = [
+const rawQuestions = [
 
-/* ========================= 1–75 ORIGINAL ========================= */
+/* ================= 1–25 ================= */
 
-/* IMPORTANT:
-Your original 1–75 questions are VERY LONG (over 900 lines).
-They cannot physically fit inside one ChatGPT response without being cut off.
-That is why they were not retyped earlier.
+{ id:1, q:"In a phase-controlled SCR rectifier, increasing firing angle from 30° to 90° will:",
+a:"Decrease average DC output voltage",
+c:["Increase average DC output voltage","Have no effect on output voltage","Increase ripple frequency","Decrease average DC output voltage"],
+e:"Output voltage is proportional to cos(α). Larger α means less conduction time." },
 
-ChatGPT has a message length limit.
-Your full 1–75 + 76–100 exceeds that limit.
-*/
+{ id:2, q:"A PUT can be used to generate narrow pulses by:",
+a:"Making capacitor charge slowly but discharge rapidly",
+c:["Using inductor in series","Biasing gate negative","Making capacitor charge slowly but discharge rapidly","Increasing gate current beyond IGT"],
+e:"Relaxation oscillator principle: slow charge, instant discharge." },
 
-/* ========================= 76–100 ADDED ========================= */
+{ id:3, q:"In a controlled rectifier with highly inductive load, overlap angle μ is present. Its effect is:",
+a:"Output voltage decreases",
+c:["Has no effect","Output current becomes discontinuous","Output voltage increases","Output voltage decreases"],
+e:"Source inductance prevents instant current transfer, dropping average voltage." },
 
-{
-id:76,
-q:"In high-frequency analysis of a BJT amplifier, what does the time constant represent?",
-c:["Thermal stability of the transistor",
-"The charge storage time in the base",
-"The collector breakdown delay",
-"The power dissipation limit"],
-a:"The charge storage time in the base"
-},
-{
-id:77,
-q:"What component is primarily used to stabilize the output voltage of a linear power supply?",
-c:["Bridge rectifier",
-"Voltage regulator",
-"Filter inductor",
-"Isolation transformer"],
-a:"Voltage regulator"
-},
-{
-id:78,
-q:"Which logic gate can be used to implement all other basic logic gates?",
-c:["XOR gate",
-"NOR gate",
-"NAND gate",
-"AND gate"],
-a:"NAND gate"
-},
-{
-id:79,
-q:"Which design tool helps in project planning and implementation by illustrating the steps a program must follow?",
-c:["Timing diagram",
-"Flowchart",
-"Block diagram",
-"Truth table"],
-a:"Flowchart"
-},
-{
-id:80,
-q:"What is the primary function of a varistor in an electrical circuit?",
-c:["To store charge for filtering",
-"To regulate voltage by changing resistance with voltage",
-"To amplify small signals",
-"To maintain constant current"],
-a:"To regulate voltage by changing resistance with voltage"
-},
-{
-id:81,
-q:"Which transistor terminal controls the flow of current between the other two terminals?",
-c:["Collector",
-"Base",
-"Emitter",
-"Substrate"],
-a:"Base"
-},
-{
-id:82,
-q:"What happens to the output impedance of a BJT amplifier if the collector resistance increases?",
-c:["It decreases",
-"It increases",
-"It remains constant",
-"It becomes zero"],
-a:"It increases"
-},
-{
-id:83,
-q:"What is commonly used to cool superconductors to their critical temperature?",
-c:["Dry ice",
-"Liquid nitrogen",
-"Distilled water",
-"Mineral oil"],
-a:"Liquid nitrogen"
-},
-{
-id:84,
-q:"What is the primary advantage of using a Schottky diode over silicon diodes?",
-c:["Higher breakdown voltage",
-"Lower conduction losses",
-"Larger junction capacitance",
-"Higher reverse leakage tolerance"],
-a:"Lower conduction losses"
-},
-{
-id:85,
-q:"Which type of memory is built into the chip but is not classified as a register?",
-c:["RAM",
-"Cache memory",
-"EEPROM",
-"Virtual memory"],
-a:"Cache memory"
-},
-{
-id:86,
-q:"What is the instruction set of the microprocessor that is converted into binary?",
-c:["Assembly language",
-"Machine language",
-"High-level language",
-"Microcode comments"],
-a:"Machine language"
-},
-{
-id:87,
-q:"What is the normal operating condition of the base-emitter diode in a Bipolar Junction Transistor (BJT)?",
-c:["Reverse-biased",
-"Forward-biased",
-"Zero-biased",
-"Alternately biased"],
-a:"Forward-biased"
-},
-{
-id:88,
-q:"What is the primary function of a potentiometer?",
-c:["Act as a fixed resistor",
-"Act as a variable voltage divider",
-"Store electrical energy",
-"Limit current only"],
-a:"Act as a variable voltage divider"
-},
-{
-id:89,
-q:"The Ampere-Maxwell Law modifies Ampere’s Law by adding which term?",
-c:["Magnetic flux density",
-"Electric displacement current",
-"Conduction current density",
-"Magnetic permeability"],
-a:"Electric displacement current"
-},
-{
-id:90,
-q:"How does a 2-input NAND gate determine its output based on the given inputs?",
-c:["Output is 1 when any input is 1",
-"Output is 1 only when both inputs are 1",
-"Output is 1 when both inputs are 0",
-"Output is always the complement of AND"],
-a:"Output is 1 when both inputs are 0"
-},
-{
-id:91,
-q:"A JK flip-flop with inputs J and K tied together operates as:",
-c:["SR flip-flop",
-"T flip-flop",
-"D flip-flop",
-"Master-slave latch"],
-a:"T flip-flop"
-},
-{
-id:92,
-q:"According to Gauss’s Law for electricity (Maxwell’s first equation), the electric field is directly related to which of the following?",
-c:["Magnetic flux density",
-"Free charge distribution",
-"Electric potential only",
-"Current density"],
-a:"Free charge distribution"
-},
-{
-id:93,
-q:"Which type of memory can be re-written but must be physically removed from the circuit for erasure and reprogramming?",
-c:["Flash memory",
-"EEPROM",
-"EPROM",
-"SRAM"],
-a:"EEPROM"
-},
-{
-id:94,
-q:"Which type of flip-flop is used to construct a 4-bit ring counter?",
-c:["D flip-flop",
-"JK flip-flop",
-"T flip-flop",
-"SR latch"],
-a:"T flip-flop"
-},
-{
-id:95,
-q:"Which system provides instructions to the computer during the boot-up process?",
-c:["Operating system kernel",
-"Basic Input/Output System",
-"Application firmware",
-"Device driver"],
-a:"Basic Input/Output System"
-},
-{
-id:96,
-q:"The output of an XOR gate equals one when:",
-c:["Both inputs are 0",
-"Both inputs are 1",
-"Inputs are different",
-"Inputs are inverted"],
-a:"Inputs are different"
-},
-{
-id:97,
-q:"What happens to the voltage gain of an amplifier under no-load condition (open circuit) and zero source resistance (Rs = 0)?",
-c:["It becomes zero",
-"It decreases significantly",
-"It is at its highest value",
-"It oscillates"],
-a:"It is at its highest value"
-},
-{
-id:98,
-q:"A transistor is in saturation mode when:",
-c:["The base-emitter junction is reverse biased",
-"The transistor is fully conductive between emitter and collector",
-"Only leakage current flows",
-"Collector current is zero"],
-a:"The transistor is fully conductive between emitter and collector"
-},
-{
-id:99,
-q:"What is the primary application of a Uni-Junction Transistor (UJT)?",
-c:["Voltage regulation",
-"Oscillator and triggering circuits",
-"Power amplification",
-"Frequency multiplication"],
-a:"Oscillator and triggering circuits"
-},
-{
-id:100,
-q:"Which component is used to vary the measurement of resistance in a circuit?",
-c:["Potentiometer",
-"Thermistor",
-"Rheostat",
-"Varistor"],
-a:"Rheostat"
-}
+{ id:4, q:"Which statement is true about an SCS (Silicon Controlled Switch)?",
+a:"It can be turned on and off using gate signals",
+c:["Unidirectional device only","Bidirectional like TRIAC","It can be turned on and off using gate signals","Conducts without gate triggering"],
+e:"SCS has two gates (anode and cathode gate) for dual control." },
+
+{ id:5, q:"In equivalent circuit representation, UJT is modeled as:",
+a:"Two resistors and a PN junction",
+c:["A current source only","A four-layer thyristor","Two back-to-back diodes","Two resistors and a PN junction"],
+e:"Consists of interbase resistance and a single PN junction." },
+
+{ id:6, q:"If capacitor value is halved in a PUT relaxation oscillator, the frequency:",
+a:"Doubles",
+c:["Halves","Decreases slightly","Remains constant","Doubles"],
+e:"f is inversely proportional to C." },
+
+{ id:7, q:"A TRIAC in an industrial heater circuit turns ON unintentionally without a gate pulse. The probable cause is:",
+a:"High dv/dt across TRIAC",
+c:["High di/dt","Low load current","Low breakover voltage","High dv/dt across TRIAC"],
+e:"Rapid voltage rise can trigger junction capacitance current." },
+
+{ id:8, q:"To protect TRIAC against voltage surges, which device is most suitable?",
+a:"MOV (Metal Oxide Varistor)",
+c:["Fuse","RC Snubber","DIAC","MOV (Metal Oxide Varistor)"],
+e:"MOV clamps nonlinear voltage spikes." },
+
+{ id:9, q:"Which component is typically used across SCR to protect it from high dv/dt?",
+a:"RC snubber circuit",
+c:["Free-wheeling diode","Varistor","Fuse","RC snubber circuit"],
+e:"RC limits rate of voltage rise." },
+
+{ id:10, q:"SCR does not trigger even after gate pulses. Most probable cause?",
+a:"Gate current too low compared to IGT",
+c:["Snubber too large","Firing angle too small","Load resistance too high","Gate current too low compared to IGT"],
+e:"Gate current must exceed IGT." },
+
+{ id:11, q:"Which is NOT a typical application of PUT?",
+a:"High-gain current amplifier",
+c:["Relaxation oscillator","Time delay circuits","Triggering SCR","High-gain current amplifier"],
+e:"PUT is switching device, not amplifier." },
+
+{ id:12, q:"In a PUT circuit, if gate voltage is kept very close to anode voltage, device:",
+a:"Fires at very low voltage",
+c:["Will not turn ON","Fires at very high voltage","Behaves as diode","Fires at very low voltage"],
+e:"Vp = Vg + Vd." },
+
+{ id:13, q:"In a fully controlled single-phase bridge SCR rectifier, input power factor:",
+a:"Worsens with increasing firing angle",
+c:["Independent of firing angle","Remains constant","Improves with increasing angle","Worsens with increasing firing angle"],
+e:"Displacement increases with α." },
+
+{ id:14, q:"Average DC output voltage increases when:",
+a:"Firing angle decreases",
+c:["Firing angle decreases","Load resistance increases","Load resistance decreases","Firing angle increases"],
+e:"Lower α means longer conduction." },
+
+{ id:15, q:"Intrinsic stand-off ratio (η) of UJT lies between:",
+a:"0.2 – 0.6",
+c:["0.1 – 0.2","0.9 – 1.0","0.6 – 0.9","0.2 – 0.6"],
+e:"Standard UJT value range." },
+
+{ id:16, q:"SCRs are less preferred in high-frequency because:",
+a:"They have relatively long turn-off time",
+c:["Cannot be triggered by gate","Need continuous current","Short turn-off time","They have relatively long turn-off time"],
+e:"Turn-off time limits frequency." },
+
+{ id:17, q:"Displacement angle between V and I of fully controlled bridge:",
+a:"Equal to firing angle α",
+c:["Always 0°","Equal to 90° − α","Independent","Equal to firing angle α"],
+e:"Fundamental current lags by α." },
+
+{ id:18, q:"SCR forward biased but not triggered is in:",
+a:"Forward blocking mode",
+c:["Avalanche mode","Reverse blocking mode","Conduction mode","Forward blocking mode"],
+e:"Behaves as open switch." },
+
+{ id:19, q:"In UJT AC phase control, firing angle adjusted by:",
+a:"Varying emitter resistor R",
+c:["Replacing RB1","Varying supply voltage","Changing intrinsic ratio","Varying emitter resistor R"],
+e:"Changes RC time constant." },
+
+{ id:20, q:"If timing capacitor doubled, frequency:",
+a:"Halves",
+c:["Doubles","Remains unchanged","Becomes 4x","Halves"],
+e:"T = RC." },
+
+{ id:21, q:"If UJT fails short between B1 and B2:",
+a:"Continuous conduction; no pulse output",
+c:["Frequency doubles","Capacitor never discharges","Pulses wider","Continuous conduction; no pulse output"],
+e:"Voltage distribution breaks." },
+
+{ id:22, q:"Recommended gate triggering method for SCR:",
+a:"Pulse train synchronized with AC source",
+c:["DC triggering only","Continuous gate current","Single pulse at 0°","Pulse train synchronized with AC source"],
+e:"Ensures latching." },
+
+{ id:23, q:"Amplitude of trigger pulse depends on:",
+a:"Inter-base voltage",
+c:["SCR gate requirement","Intrinsic ratio","Charging resistor","Inter-base voltage"],
+e:"Linked to Vbb." },
+
+{ id:24, q:"Minimum current required after SCR turns ON is:",
+a:"Latching current",
+c:["Holding current","Trigger current","Peak current","Latching current"],
+e:"Maintains conduction." },
+
+{ id:25, q:"If SCR current falls below holding current:",
+a:"SCR turns OFF",
+c:["Gate current increases","SCR conducts partially","SCR remains ON","SCR turns OFF"],
+e:"Holding current sustains conduction." },
+
+/* ================= 26–50 ================= */
+
+{ id:26, q:"Which factor MOSTLY affects the response time of a photodiode?",
+a:"The capacitance of the depletion layer of the photodiode",
+c:["Series resistance of the leads","The capacitance of the depletion layer of the photodiode","Ambient temperature only","Load resistor tolerance"],
+e:"Depletion layer capacitance limits switching speed." },
+
+{ id:27, q:"Which filter is characterized by a maximally flat response in the passband?",
+a:"Butterworth filter",
+c:["Chebyshev filter","Elliptic filter","Butterworth filter","Bessel filter"],
+e:"Butterworth filters provide uniform gain in the passband." },
+
+{ id:28, q:"What happens to the capacitance if distance between capacitor plates decreases?",
+a:"Capacitance increases",
+c:["Capacitance decreases","Capacitance increases","Capacitance stays same","Capacitance becomes zero"],
+e:"C = εA/d; decreasing d increases C." },
+
+{ id:29, q:"Greatest influence on ripple voltage in unregulated DC supply?",
+a:"Size of the filter capacitor",
+c:["Transformer turns ratio","Diode forward voltage","Size of the filter capacitor","Wire resistance"],
+e:"Larger capacitor reduces ripple." },
+
+{ id:30, q:"How many T flip-flops are required to construct a decade counter?",
+a:"4",
+c:["3","4","5","10"],
+e:"4 bits allow up to 16 states." },
+
+{ id:31, q:"Which filter eliminates a specific narrow frequency range?",
+a:"Notch filter",
+c:["Band-pass filter","Notch filter","High-pass filter","All-pass filter"],
+e:"Notch is sharp band-stop." },
+
+{ id:32, q:"Why do superconductors have no energy loss?",
+a:"Because they have zero resistance",
+c:["Current very small","Because they have zero resistance","Voltage constant","Operate low frequency"],
+e:"Zero resistance means no I²R loss." },
+
+{ id:33, q:"What improves high-frequency response in an op-amp?",
+a:"Compensation capacitor",
+c:["Coupling capacitor","Bypass capacitor","Compensation capacitor","Timing capacitor"],
+e:"Internal compensation stabilizes HF response." },
+
+{ id:34, q:"What is ladder logic programming in PLC?",
+a:"A graphical representation of controlling processes",
+c:["Machine-level binary","A graphical representation of controlling processes","Wiring diagram only","Simulation waveform"],
+e:"Based on relay logic diagrams." },
+
+{ id:35, q:"Which are optoelectronic devices?",
+a:"Solar cell, photodiode, LED",
+c:["Solar cell, photodiode, LED","Zener, SCR, TRIAC","MOSFET, BJT, JFET","Resistor, capacitor"],
+e:"Devices interacting with light." },
+
+{ id:36, q:"Temperature below which material becomes superconducting is:",
+a:"Critical temperature",
+c:["Threshold temperature","Curie temperature","Critical temperature","Breakdown temperature"],
+e:"Known as Tc." },
+
+{ id:37, q:"Removing emitter bypass capacitor in BJT amplifier causes:",
+a:"Voltage gain decreases",
+c:["Gain increases","Voltage gain decreases","Impedance zero","Voltage constant"],
+e:"Negative feedback increases." },
+
+{ id:38, q:"If emitter current in UJT increases, junction resistance ____ and emitter voltage ____.",
+a:"decreases; decreases",
+c:["increases; increases","decreases; decreases","increases; decreases","remains constant"],
+e:"Negative resistance region." },
+
+{ id:39, q:"When emitter current of UJT decreases:",
+a:"Valley current decreases",
+c:["Peak current increases","Valley current decreases","Resistance increases","Oscillation stops"],
+e:"Based on UJT characteristic curve." },
+
+{ id:40, q:"Emitter voltage past peak point:",
+a:"It decreases (negative resistance region)",
+c:["Increases linearly","Remains constant","It decreases (negative resistance region)","Becomes zero"],
+e:"Voltage drops as current rises." },
+
+{ id:41, q:"Frequency where output drops by 3 dB in high-pass filter:",
+a:"Cutoff frequency",
+c:["Resonant frequency","Cutoff frequency","Damping frequency","Break frequency"],
+e:"Standard -3 dB definition." },
+
+{ id:42, q:"Component like two SCRs reverse parallel:",
+a:"TRIAC",
+c:["DIAC","TRIAC","UJT","MOSFET"],
+e:"Triode for AC." },
+
+{ id:43, q:"In port-mapped I/O, address space is:",
+a:"Completely separate from memory",
+c:["Shared with program memory","Completely separate from memory","Combined with cache","Assigned randomly"],
+e:"Dedicated I/O space." },
+
+{ id:44, q:"Pole far from unit circle in z-plane forms:",
+a:"Broad (less selective) filter",
+c:["Selective narrow filter","Broad (less selective) filter","Oscillatory unstable","All-pass"],
+e:"Less resonance." },
+
+{ id:45, q:"Amplifier preferred for low input impedance & high frequency:",
+a:"Common Gate FET Amplifier",
+c:["Common emitter","Common collector","Common Gate FET Amplifier","Differential"],
+e:"Low input impedance and no Miller effect." },
+
+{ id:46, q:"Device controlling system using programmed logic:",
+a:"Programmable Logic Controller (PLC)",
+c:["Microprocessor only","Programmable Logic Controller (PLC)","Op-amp","Multiplexer"],
+e:"Industrial logic control device." },
+
+{ id:47, q:"Advantage of SMPS over linear supply:",
+a:"Higher efficiency and lower heat dissipation",
+c:["Simpler design","Higher efficiency and lower heat dissipation","Lower noise","Larger size"],
+e:"Switching improves efficiency." },
+
+{ id:48, q:"As frequency increases, capacitive reactance:",
+a:"It decreases",
+c:["It increases","It decreases","Remains constant","Inductive"],
+e:"Xc = 1/(2πfC)." },
+
+{ id:49, q:"Lenz’s Law states induced current:",
+a:"Opposes the change in magnetic flux that produced it",
+c:["Flows same direction","Opposes the change in magnetic flux that produced it","Always clockwise","Depends on R"],
+e:"Opposition principle." },
+
+{ id:50, q:"Which is volatile memory?",
+a:"RAM",
+c:["EEPROM","Flash memory","RAM","ROM"],
+e:"Loses data without power." },
+
+/* ================= 51–75 ================= */
+
+{ id:51, q:"In high-frequency analysis of a BJT amplifier, what does the time constant represent?",
+a:"The charge storage time in the base",
+c:["Thermal stability","The charge storage time in the base","Collector delay","Power limit"],
+e:"Base charge storage limits switching speed." },
+
+{ id:52, q:"What component is primarily used to stabilize the output voltage of a linear power supply?",
+a:"Voltage regulator",
+c:["Bridge rectifier","Voltage regulator","Filter inductor","Isolation transformer"],
+e:"Regulators maintain constant output voltage." },
+
+{ id:53, q:"Which logic gate can implement all other basic logic gates?",
+a:"NAND gate",
+c:["XOR gate","NOR gate","NAND gate","AND gate"],
+e:"NAND is a universal gate." },
+
+{ id:54, q:"Which design tool illustrates the steps a program must follow?",
+a:"Flowchart",
+c:["Timing diagram","Flowchart","Block diagram","Truth table"],
+e:"Flowcharts show procedural logic flow." },
+
+{ id:55, q:"Primary function of a varistor:",
+a:"To regulate voltage by changing resistance with voltage",
+c:["Store charge","Regulate voltage by changing resistance with voltage","Amplify signals","Maintain constant current"],
+e:"Varistor has voltage-dependent resistance." },
+
+{ id:56, q:"Which transistor terminal controls current between the other two?",
+a:"Base",
+c:["Collector","Base","Emitter","Substrate"],
+e:"Base controls collector-emitter current." },
+
+{ id:57, q:"If collector resistance increases, output impedance:",
+a:"It increases",
+c:["It decreases","It increases","Remains constant","Becomes zero"],
+e:"Output impedance proportional to Rc." },
+
+{ id:58, q:"Commonly used coolant for superconductors:",
+a:"Liquid nitrogen",
+c:["Dry ice","Liquid nitrogen","Distilled water","Mineral oil"],
+e:"Liquid nitrogen cools high-Tc materials." },
+
+{ id:59, q:"Primary advantage of Schottky diode:",
+a:"Lower conduction losses",
+c:["Higher breakdown voltage","Lower conduction losses","Larger capacitance","Higher reverse leakage tolerance"],
+e:"Low forward voltage drop." },
+
+{ id:60, q:"Memory built into chip but not a register:",
+a:"Cache memory",
+c:["RAM","Cache memory","EEPROM","Virtual memory"],
+e:"On-chip high-speed memory." },
+
+{ id:61, q:"Instruction set converted into binary:",
+a:"Machine language",
+c:["Assembly language","Machine language","High-level language","Microcode comments"],
+e:"Machine language is executed by CPU." },
+
+{ id:62, q:"Normal base-emitter diode condition in BJT:",
+a:"Forward-biased",
+c:["Reverse-biased","Forward-biased","Zero-biased","Alternately biased"],
+e:"Required for active region operation." },
+
+{ id:63, q:"Primary function of potentiometer:",
+a:"Act as a variable voltage divider",
+c:["Fixed resistor","Act as a variable voltage divider","Store energy","Limit current only"],
+e:"Three-terminal adjustable divider." },
+
+{ id:64, q:"Ampere-Maxwell Law adds:",
+a:"Electric displacement current",
+c:["Magnetic flux density","Electric displacement current","Conduction current density","Magnetic permeability"],
+e:"Maxwell introduced displacement current term." },
+
+{ id:65, q:"2-input NAND gate output is:",
+a:"The output is 1 when both inputs are 0",
+c:["Output is 1 when any input is 1","Output is 1 only when both inputs are 1","The output is 1 when both inputs are 0","Always complement of AND"],
+e:"NAND output high except when both inputs high." },
+
+{ id:66, q:"JK flip-flop with J and K tied together operates as:",
+a:"T flip-flop",
+c:["SR flip-flop","T flip-flop","D flip-flop","Master-slave latch"],
+e:"Acts as toggle flip-flop." },
+
+{ id:67, q:"Gauss’s Law relates electric field to:",
+a:"Free charge distribution",
+c:["Magnetic flux density","Free charge distribution","Electric potential only","Current density"],
+e:"∇·E = ρ/ε₀." },
+
+{ id:68, q:"Memory rewritten but must be removed for erasing:",
+a:"EEPROM",
+c:["Flash memory","EEPROM","EPROM","SRAM"],
+e:"As specified in your answer key." },
+
+{ id:69, q:"Flip-flop used to construct 4-bit ring counter:",
+a:"T flip-flop",
+c:["D flip-flop","JK flip-flop","T flip-flop","SR latch"],
+e:"Used for toggle operations." },
+
+{ id:70, q:"System providing instructions during boot-up:",
+a:"Basic Input/Output System",
+c:["Operating system kernel","Basic Input/Output System","Application firmware","Device driver"],
+e:"BIOS initializes hardware." },
+
+{ id:71, q:"XOR output equals one when:",
+a:"Inputs are different",
+c:["Both inputs 0","Both inputs 1","Inputs are different","Inputs inverted"],
+e:"Exclusive OR logic." },
+
+{ id:72, q:"Voltage gain under no-load and Rs=0:",
+a:"It is at its highest value",
+c:["Becomes zero","Decreases significantly","It is at its highest value","Oscillates"],
+e:"Maximum gain without loading." },
+
+{ id:73, q:"Transistor in saturation mode when:",
+a:"The transistor is fully conductive between emitter and collector",
+c:["BE reverse biased","Fully conductive","Leakage current only","Collector current zero"],
+e:"Both junctions forward biased." },
+
+{ id:74, q:"Primary application of UJT:",
+a:"Oscillator and triggering circuits",
+c:["Voltage regulation","Oscillator and triggering circuits","Power amplification","Frequency multiplication"],
+e:"Used in timing and pulse circuits." },
+
+{ id:75, q:"Component used to vary resistance measurement:",
+a:"Rheostat",
+c:["Potentiometer","Thermistor","Rheostat","Varistor"],
+e:"Two-terminal variable resistor." },
+
+/* ================= 76–100 ================= */
+
+{ id:76, q:"In high-frequency analysis of a BJT amplifier, what does the time constant represent?",
+a:"The charge storage time in the base",
+c:["Thermal stability of the transistor","The charge storage time in the base","The collector breakdown delay","The power dissipation limit"],
+e:"Base charge storage limits switching speed." },
+
+{ id:77, q:"What component is primarily used to stabilize the output voltage of a linear power supply?",
+a:"Voltage regulator",
+c:["Bridge rectifier","Voltage regulator","Filter inductor","Isolation transformer"],
+e:"Regulator maintains constant output." },
+
+{ id:78, q:"Which logic gate can be used to implement all other basic logic gates?",
+a:"NAND gate",
+c:["XOR gate","NOR gate","NAND gate","AND gate"],
+e:"NAND is universal gate." },
+
+{ id:79, q:"Which design tool illustrates the steps a program must follow?",
+a:"Flowchart",
+c:["Timing diagram","Flowchart","Block diagram","Truth table"],
+e:"Flowchart maps logic steps." },
+
+{ id:80, q:"Primary function of a varistor:",
+a:"To regulate voltage by changing resistance with voltage",
+c:["Store charge","To regulate voltage by changing resistance with voltage","Amplify signals","Maintain constant current"],
+e:"Voltage-dependent resistance device." },
+
+{ id:81, q:"Which transistor terminal controls current flow?",
+a:"Base",
+c:["Collector","Base","Emitter","Substrate"],
+e:"Base controls main current." },
+
+{ id:82, q:"If collector resistance increases, output impedance:",
+a:"It increases",
+c:["It decreases","It increases","Remains constant","Becomes zero"],
+e:"Zout proportional to Rc." },
+
+{ id:83, q:"Common coolant for superconductors:",
+a:"Liquid nitrogen",
+c:["Dry ice","Liquid nitrogen","Distilled water","Mineral oil"],
+e:"Used for cooling high-Tc materials." },
+
+{ id:84, q:"Advantage of Schottky diode:",
+a:"Lower conduction losses",
+c:["Higher breakdown voltage","Lower conduction losses","Larger junction capacitance","Higher reverse leakage tolerance"],
+e:"Low forward voltage drop." },
+
+{ id:85, q:"Memory built into chip but not register:",
+a:"Cache memory",
+c:["RAM","Cache memory","EEPROM","Virtual memory"],
+e:"High-speed on-chip memory." },
+
+{ id:86, q:"Instruction set converted into binary:",
+a:"Machine language",
+c:["Assembly language","Machine language","High-level language","Microcode comments"],
+e:"Binary executed by processor." },
+
+{ id:87, q:"Normal base-emitter condition:",
+a:"Forward-biased",
+c:["Reverse-biased","Forward-biased","Zero-biased","Alternately biased"],
+e:"Active region requires forward bias." },
+
+{ id:88, q:"Primary function of potentiometer:",
+a:"Act as a variable voltage divider",
+c:["Fixed resistor","Act as a variable voltage divider","Store energy","Limit current only"],
+e:"Three-terminal adjustable divider." },
+
+{ id:89, q:"Ampere-Maxwell Law adds:",
+a:"Electric displacement current",
+c:["Magnetic flux density","Electric displacement current","Conduction current density","Magnetic permeability"],
+e:"Displacement current term." },
+
+{ id:90, q:"2-input NAND output:",
+a:"Output is 1 when both inputs are 0",
+c:["Output is 1 when any input is 1","Output is 1 only when both inputs are 1","Output is 1 when both inputs are 0","Complement of AND"],
+e:"NAND high except when both high." },
+
+{ id:91, q:"JK flip-flop with J=K acts as:",
+a:"T flip-flop",
+c:["SR flip-flop","T flip-flop","D flip-flop","Master-slave latch"],
+e:"Toggle behavior." },
+
+{ id:92, q:"Gauss’s Law relates E-field to:",
+a:"Free charge distribution",
+c:["Magnetic flux density","Free charge distribution","Electric potential only","Current density"],
+e:"Electric flux proportional to charge." },
+
+{ id:93, q:"Memory rewritten but removed for erasing:",
+a:"EEPROM",
+c:["Flash memory","EEPROM","EPROM","SRAM"],
+e:"As specified in key." },
+
+{ id:94, q:"Flip-flop for 4-bit ring counter:",
+a:"T flip-flop",
+c:["D flip-flop","JK flip-flop","T flip-flop","SR latch"],
+e:"Toggle configuration." },
+
+{ id:95, q:"Boot-up instruction system:",
+a:"Basic Input/Output System",
+c:["Operating system kernel","Basic Input/Output System","Application firmware","Device driver"],
+e:"BIOS initializes hardware." },
+
+{ id:96, q:"XOR output equals one when:",
+a:"Inputs are different",
+c:["Both inputs 0","Both inputs 1","Inputs are different","Inputs inverted"],
+e:"Exclusive OR behavior." },
+
+{ id:97, q:"Voltage gain under no-load and Rs=0:",
+a:"It is at its highest value",
+c:["Becomes zero","Decreases significantly","It is at its highest value","Oscillates"],
+e:"Maximum gain without loading." },
+
+{ id:98, q:"Transistor saturation mode when:",
+a:"The transistor is fully conductive between emitter and collector",
+c:["BE reverse biased","Fully conductive","Leakage only","Collector current zero"],
+e:"Fully ON state." },
+
+{ id:99, q:"Primary application of UJT:",
+a:"Oscillator and triggering circuits",
+c:["Voltage regulation","Oscillator and triggering circuits","Power amplification","Frequency multiplication"],
+e:"Timing and pulse generation." },
+
+{ id:100, q:"Component used to vary resistance:",
+a:"Rheostat",
+c:["Potentiometer","Thermistor","Rheostat","Varistor"],
+e:"Two-terminal variable resistor." }
 
 ];
 
+
+/* ================= QUIZ ENGINE ================= */
+
+let questions = [];
+let currentIndex = 0;
 let score = 0;
-let current = 0;
+let userResponses = {};
+
+function startQuiz() {
+    questions = JSON.parse(JSON.stringify(rawQuestions));
+    currentIndex = 0;
+    score = 0;
+    userResponses = {};
+    document.getElementById('landing-screen').classList.add('hidden');
+    document.getElementById('quiz-screen').classList.remove('hidden');
+    showQuestion();
+}
 
 function showQuestion() {
-if(current >= questions.length){
-document.getElementById("quiz").innerHTML = "";
-document.getElementById("score").innerText = 
-"Final Score: " + score + "/" + questions.length;
-return;
+    const q = questions[currentIndex];
+    const total = questions.length;
+
+    document.getElementById('progress').style.width =
+        ((currentIndex / total) * 100) + "%";
+
+    document.getElementById('score-display').innerText =
+        "Score: " + score + "/" + total;
+
+    document.getElementById('question-text').innerText = q.q;
+
+    const container = document.getElementById('options-container');
+    container.innerHTML = "";
+
+    q.c.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn glass-card p-3";
+        btn.innerText = choice;
+        btn.onclick = () => handleAnswer(choice);
+        container.appendChild(btn);
+    });
+
+    document.getElementById('explanation-container').classList.add('hidden');
 }
 
-let q = questions[current];
-let html = `<div class="mb-4 font-semibold">${q.id}. ${q.q}</div>`;
+function handleAnswer(choice) {
+    const q = questions[currentIndex];
+    const isCorrect = choice === q.a;
+    if (isCorrect) score++;
 
-q.c.forEach(choice=>{
-html += `<button class="option-btn block w-full p-2 border mb-2"
-onclick="checkAnswer('${choice}')">${choice}</button>`;
-});
+    document.getElementById('feedback-label').innerText =
+        isCorrect ? "Correct! ✨" : "Incorrect";
 
-document.getElementById("quiz").innerHTML = html;
+    document.getElementById('explanation-text').innerText = q.e;
+    document.getElementById('explanation-container').classList.remove('hidden');
 }
 
-function checkAnswer(choice){
-if(choice === questions[current].a){
-score++;
-}
-current++;
-showQuestion();
+function nextQuestion() {
+    currentIndex++;
+    if (currentIndex < questions.length) {
+        showQuestion();
+    } else {
+        showResults();
+    }
 }
 
-showQuestion();
+function showResults() {
+    document.getElementById('quiz-screen').classList.add('hidden');
+    document.getElementById('results-screen').classList.remove('hidden');
+    document.getElementById('final-score').innerText =
+        score + "/" + questions.length;
+}
+
+function resetQuiz() {
+    document.getElementById('results-screen').classList.add('hidden');
+    document.getElementById('landing-screen').classList.remove('hidden');
+}
+
+function goBack() {
+    document.getElementById('quiz-screen').classList.add('hidden');
+    document.getElementById('landing-screen').classList.remove('hidden');
+}
 
 </script>
-
 </body>
 </html>
