@@ -3,392 +3,318 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RC Exams - Study Mode</title>
+    <title>Electronics Reviewer - Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
-        
         body {
-            font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(135deg, #f3e8ff 0%, #e0e7ff 100%);
-            color: #4c1d95;
+            font-family: 'Plus+Jakarta+Sans', sans-serif;
+            background: linear-gradient(135deg, #f0f0ff 0%, #e0e0ff 100%);
             min-height: 100vh;
+            color: #4a4a8a;
         }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            border-radius: 2rem;
-            box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.1), 0 8px 10px -6px rgba(139, 92, 246, 0.1);
-        }
-
-        .option-btn {
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 2px solid #ddd6fe;
-            border-radius: 1.25rem;
-        }
-
-        .option-btn:hover:not(:disabled) {
-            transform: scale(1.02);
-            background-color: #ede9fe;
-            border-color: #8b5cf6;
-            color: #5b21b6;
-        }
-
-        .correct {
-            background-color: #dcfce7 !important;
-            border-color: #22c55e !important;
-            color: #166534 !important;
-        }
-
-        .incorrect {
-            background-color: #fee2e2 !important;
-            border-color: #ef4444 !important;
-            color: #991b1b !important;
-        }
-
-        .progress-bar {
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            background: linear-gradient(90deg, #c084fc, #818cf8);
-        }
-
-        .floating {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
+        .floating-book { animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 2rem; box-shadow: 0 10px 30px rgba(100, 100, 180, 0.1); }
+        .option-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: 2px solid transparent; width: 100%; text-align: left; }
+        .option-btn:hover:not(:disabled) { background-color: #f5f3ff; border-color: #a78bfa; transform: scale(1.01); }
+        .correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .progress-bar { transition: width 0.4s ease-in-out; }
     </style>
 </head>
-<body class="p-4 md:p-8 flex flex-col items-center">
+<body class="flex flex-col items-center justify-center p-4">
 
-    <!-- Menu Screen -->
-    <div id="main-menu" class="w-full max-w-xl py-12 text-center">
-        <div class="mb-8 floating inline-block">
-            <div class="bg-white p-4 rounded-full shadow-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    <div id="landing-screen" class="w-full max-w-2xl text-center space-y-8 py-12">
+        <div class="flex justify-center mb-6">
+            <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg floating-book">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
             </div>
         </div>
-        <h1 class="text-4xl font-bold text-purple-900 mb-2">Study Time! ✨</h1>
-        <p class="text-purple-600 mb-10">Choose a level to start your quiz.</p>
-        
-        <div class="space-y-4">
-            <button onclick="startQuiz('part1')" class="glass-card w-full p-6 text-left hover:bg-purple-50 transition-colors group">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h2 class="text-xl font-bold text-purple-800">RC Exams: Part 01</h2>
-                        <p class="text-purple-500 text-sm">Fundamentals & Components</p>
-                    </div>
-                    <span class="bg-purple-100 text-purple-600 font-bold px-4 py-1 rounded-full text-sm">121 Qs</span>
+        <h1 class="text-4xl md:text-5xl font-bold text-[#5b21b6]">Go, Future Engineer! ✨</h1>
+        <div class="space-y-4 pt-8">
+            <button onclick="startQuiz(false)" class="glass-card w-full py-6 px-8 flex justify-between items-center hover:bg-purple-50 transition-colors group">
+                <div class="text-left">
+                    <div class="text-xl font-bold text-purple-900">RC Exams: Part 01</div>
+                    <div class="text-sm text-purple-500">Full Set: 75 Questions</div>
                 </div>
+                <span class="bg-purple-100 text-purple-600 px-4 py-1 rounded-full text-sm font-bold group-hover:bg-purple-200">Start</span>
             </button>
-
-            <button onclick="startQuiz('part2')" class="glass-card w-full p-6 text-left hover:bg-purple-50 transition-colors group">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h2 class="text-xl font-bold text-purple-800">RC Exams: Part 02</h2>
-                        <p class="text-purple-500 text-sm">Architecture, Control & Logic</p>
-                    </div>
-                    <span class="bg-indigo-100 text-indigo-600 font-bold px-4 py-1 rounded-full text-sm">50 Qs</span>
+            <button onclick="startQuiz(true)" class="glass-card w-full py-6 px-8 flex justify-between items-center hover:bg-purple-50 transition-colors group">
+                <div class="text-left">
+                    <div class="text-xl font-bold text-purple-900">Shuffle & Play</div>
+                    <div class="text-sm text-purple-500">Randomized Question Order</div>
                 </div>
+                <span class="bg-indigo-100 text-indigo-600 px-4 py-1 rounded-full text-sm font-bold group-hover:bg-indigo-200">Shuffle</span>
             </button>
         </div>
     </div>
 
-    <!-- Quiz Screen -->
-    <div id="quiz-container" class="hidden w-full max-w-2xl">
-        <div class="flex justify-between items-center mb-6">
-            <button onclick="showMenu()" class="bg-white/50 px-4 py-2 rounded-full text-sm font-bold text-purple-600 hover:bg-white transition-all shadow-sm">
-                ← Exit
-            </button>
-            <div class="text-right">
-                <div id="score-text" class="text-sm font-bold text-purple-600">Score: 0</div>
+    <div id="quiz-screen" class="hidden w-full max-w-2xl space-y-4 fade-in">
+        <div class="flex items-center justify-between px-2">
+            <div class="flex items-center gap-2 md:gap-4 overflow-x-auto">
+                <button onclick="goBack()" class="text-purple-600 font-medium flex items-center gap-1 hover:text-purple-800 whitespace-nowrap">Exit</button>
+                <div class="h-4 w-px bg-purple-200"></div>
+                <button id="prev-btn" onclick="previousQuestion()" class="text-purple-500 text-xs md:text-sm font-medium hover:text-purple-700 disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap">Previous</button>
+                <button onclick="resetQuiz()" class="text-purple-500 text-xs md:text-sm font-medium hover:text-purple-700 whitespace-nowrap">Reset</button>
+                <button onclick="shuffleRemaining()" class="text-purple-500 text-xs md:text-sm font-medium hover:text-purple-700 whitespace-nowrap">Shuffle</button>
             </div>
+            <div class="text-purple-900 font-bold bg-white px-3 py-1 rounded-full shadow-sm border border-purple-50 text-xs md:text-base whitespace-nowrap" id="score-display">Score: 0/75</div>
         </div>
-
-        <div class="mb-8">
-            <div class="flex justify-between text-xs font-bold text-purple-400 uppercase mb-2">
-                <span id="progress-text">Question 1/0</span>
-            </div>
-            <div class="h-3 w-full bg-purple-100 rounded-full overflow-hidden border border-white shadow-inner">
-                <div id="progress-bar" class="progress-bar h-full w-0"></div>
-            </div>
+        <div class="w-full bg-purple-100 rounded-full h-2">
+            <div id="progress" class="progress-bar bg-purple-500 h-2 rounded-full" style="width: 0%"></div>
         </div>
-
-        <div id="quiz-card" class="glass-card p-8 md:p-10 mb-6">
-            <button id="prev-btn" onclick="prevQuestion()" class="mb-6 text-xs font-bold text-purple-300 hover:text-purple-600 disabled:opacity-0 transition-opacity">
-                &larr; PREVIOUS
-            </button>
-            
-            <h2 id="question-text" class="text-xl md:text-2xl font-bold leading-snug mb-8 text-purple-900"></h2>
-            
-            <div id="options-container" class="grid gap-3"></div>
-
-            <div id="feedback" class="mt-8 space-y-4 hidden">
-                <div class="bg-white/50 rounded-2xl p-5 border-2 border-dashed border-purple-200">
-                    <p class="text-xs font-bold text-purple-400 uppercase mb-1">Why?</p>
-                    <p id="explanation-text" class="text-purple-800 text-sm font-medium leading-relaxed"></p>
-                </div>
-                <button id="next-btn" class="w-full py-4 bg-purple-600 text-white rounded-2xl font-bold hover:bg-purple-700 transform active:scale-95 transition-all shadow-lg shadow-purple-200">
-                    Next Question ➔
-                </button>
+        <div class="glass-card p-6 md:p-8 space-y-8">
+            <div id="question-text" class="text-xl md:text-2xl font-semibold text-gray-800 leading-tight min-h-[80px]"></div>
+            <div id="options-container" class="grid grid-cols-1 gap-4"></div>
+            <div id="explanation-container" class="hidden p-6 bg-purple-50 rounded-2xl border border-purple-100 space-y-2">
+                <div id="feedback-label" class="font-bold text-lg"></div>
+                <p id="explanation-text" class="text-gray-700"></p>
+                <button onclick="nextQuestion()" class="mt-4 w-full bg-purple-600 text-white py-3 rounded-xl font-bold hover:bg-purple-700 transition-colors shadow-lg">Continue</button>
             </div>
         </div>
     </div>
 
-    <!-- Final Results -->
-    <div id="results-screen" class="hidden w-full max-w-xl text-center">
-        <div class="glass-card p-12">
-            <div class="mb-8">
-                <div id="final-percentage" class="text-8xl font-black text-purple-600 mb-2">0%</div>
-                <p class="text-purple-400 font-bold uppercase tracking-widest">Finished!</p>
-            </div>
-            <p id="final-score" class="text-purple-900 font-medium text-lg mb-8"></p>
-            
-            <div class="space-y-4">
-                <button id="review-mistakes-btn" onclick="toggleReview()" class="w-full py-4 bg-white text-purple-600 rounded-2xl font-bold border-2 border-purple-100 hover:border-purple-300 transition-all hidden">
-                    Review Mistakes
-                </button>
-                <button onclick="showMenu()" class="w-full py-4 bg-purple-600 text-white rounded-2xl font-bold hover:bg-purple-700 transition-all shadow-xl">
-                    Try Another Set
-                </button>
+    <div id="results-screen" class="hidden w-full max-w-2xl text-center space-y-8 py-12 fade-in">
+        <div class="glass-card p-12 space-y-6">
+            <div class="text-6xl">🎉</div>
+            <h2 class="text-3xl font-bold text-purple-900">Quiz Completed!</h2>
+            <div class="text-5xl font-black text-purple-600" id="final-score">0/75</div>
+            <p id="result-message" class="text-gray-600 italic"></p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6">
+                <button onclick="resetQuiz()" class="bg-purple-600 text-white py-4 rounded-2xl font-bold hover:bg-purple-700">Reset</button>
+                <button onclick="showReview()" id="review-btn" class="bg-white border-2 border-purple-200 text-purple-600 py-4 rounded-2xl font-bold hover:bg-purple-50">Review Mistakes</button>
             </div>
         </div>
+    </div>
 
-        <div id="review-section" class="hidden mt-8 text-left space-y-4">
-            <h3 class="text-xl font-bold text-purple-900 px-4">Mistake Review 📝</h3>
-            <div id="mistakes-container" class="space-y-4"></div>
+    <div id="review-screen" class="hidden w-full max-w-3xl space-y-6 fade-in pb-20">
+        <div class="flex items-center justify-between sticky top-4 z-10 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white">
+            <h3 class="text-2xl font-bold text-purple-900">Review Mistakes</h3>
+            <button onclick="goBack()" class="bg-purple-600 text-white px-6 py-2 rounded-xl font-bold">Done</button>
         </div>
+        <div id="mistakes-list" class="space-y-4"></div>
     </div>
 
     <script>
-        const part1Data = [
-            { q: "In a phase-controlled SCR rectifier, increasing firing angle from 30° to 90° will:", a: "Decrease average DC output voltage", e: "The output voltage is proportional to cos(α). As α increases, the average voltage decreases.", c: ["Increase average DC output voltage", "Decrease average DC output voltage", "Have no effect on output voltage", "Increase ripple frequency"] },
-            { q: "A PUT can be used to generate narrow pulses by:", a: "Making capacitor charge slowly but discharge rapidly", e: "Relaxation oscillators work by slowly accumulating charge and dumping it quickly through the device once the threshold is reached.", c: ["Using inductor in series with anode", "Biasing gate negative", "Making capacitor charge slowly but discharge rapidly", "Increasing gate current beyond IGT"] },
-            { q: "Which statement is true about an SCS (Silicon Controlled Switch)?", a: "It can be turned on and off using gate signals", e: "Unlike a standard SCR, an SCS has two gates allowing for both turn-on and turn-off control.", c: ["It is a unidirectional device that only latches on", "It can be turned on and off using gate signals", "It is bidirectional like TRIAC", "It conducts without gate triggering"] },
-            { q: "To protect TRIAC against voltage surges, which device is most suitable?", a: "MOV (Metal Oxide Varistor)", e: "MOVs clamp high voltage spikes to protect semiconductors.", c: ["MOV (Metal Oxide Varistor)", "Fuse", "RC Snubber", "DIAC"] },
-            { q: "Intrinsic stand-off ratio (η) of a UJT typically lies between:", a: "0.2 – 0.6", e: "η usually ranges from 0.2 to 0.8.", c: ["0.1 – 0.2", "0.9 – 1.0", "0.2 – 0.6", "0.6 – 0.9"] },
-            { q: "Minimum current to keep SCR conducting after trigger is removed:", a: "Latching current", e: "Latching current is the minimum to maintain ON state after gate removal.", c: ["Holding current", "Latching current", "Trigger current", "Peak current"] },
-            { q: "If the emitter current in the UJT increases, the junction resistance _____ and the emitter voltage _____.", a: "decreases; decreases", e: "UJT negative resistance region behavior.", c: ["increases; increases", "decreases; decreases", "increases; decreases", "remains constant; increases"] },
-            { q: "Which electronic component functions like two SCRs connected in reverse parallel?", a: "TRIAC", e: "Standard bidirectional thyristor.", c: ["DIAC", "TRIAC", "UJT", "MOSFET"] },
-            { q: "Which logic gate can be used to implement all other basic logic gates?", a: "NAND gate", e: "NAND is a universal gate.", c: ["XOR gate", "NOR gate", "NAND gate", "AND gate"] },
-            { q: "What is the typical input impedance of an ideal operational amplifier?", a: "Very high (approaching infinity)", e: "No input current.", c: ["Very low", "Moderate", "Very high (approaching infinity)", "Equal to output impedance"] }
-        ];
+        const rawQuestions = [
+            // Batch 1 (1-25) - Original Set
+            { id: 1, q: "In a phase-controlled SCR rectifier, increasing firing angle from 30° to 90° will:", a: "Decrease average DC output voltage", c: ["Increase average DC output voltage", "Have no effect on output voltage", "Increase ripple frequency", "Decrease average DC output voltage"], e: "Output voltage is proportional to cos(α). Larger α means less conduction time." },
+            { id: 2, q: "A PUT can be used to generate narrow pulses by:", a: "Making capacitor charge slowly but discharge rapidly", c: ["Using inductor in series", "Biasing gate negative", "Making capacitor charge slowly but discharge rapidly", "Increasing gate current beyond IGT"], e: "Relaxation oscillator principle: slow charge, instant discharge." },
+            { id: 3, q: "In a controlled rectifier with highly inductive load, overlap angle μ is present. Its effect is:", a: "Output voltage decreases", c: ["Has no effect", "Output current becomes discontinuous", "Output voltage increases", "Output voltage decreases"], e: "Source inductance prevents instant current transfer, dropping average voltage." },
+            { id: 4, q: "Which statement is true about an SCS (Silicon Controlled Switch)?", a: "It can be turned on and off using gate signals", c: ["Unidirectional device only", "Bidirectional like TRIAC", "It can be turned on and off using gate signals", "Conducts without gate triggering"], e: "SCS has two gates (anode and cathode gate) for dual control." },
+            { id: 5, q: "In equivalent circuit representation, UJT is modeled as:", a: "Two resistors and a PN junction", c: ["A current source only", "A four-layer thyristor", "Two back-to-back diodes", "Two resistors and a PN junction"], e: "Consists of interbase resistance and a single PN junction." },
+            { id: 6, q: "If capacitor value is halved in a PUT relaxation oscillator, the frequency:", a: "Doubles", c: ["Halves", "Decreases slightly", "Remains constant", "Doubles"], e: "f is inversely proportional to C ($f \\propto 1/C$)." },
+            { id: 7, q: "A TRIAC in an industrial heater circuit turns ON unintentionally without a gate pulse. The probable cause is:", a: "High dv/dt across TRIAC", c: ["High di/dt", "Low load current", "Low breakover voltage", "High dv/dt across TRIAC"], e: "Rapid voltage rise can trigger the junction capacitance current." },
+            { id: 8, q: "To protect TRIAC against voltage surges (e.g., lightning spikes), which device is most suitable?", a: "MOV (Metal Oxide Varistor)", c: ["Fuse", "RC Snubber", "DIAC", "MOV (Metal Oxide Varistor)"], e: "MOVs clamp nonlinear voltage spikes." },
+            { id: 9, q: "Which component is typically used across SCR to protect it from high dv/dt?", a: "RC snubber circuit", c: ["Free-wheeling diode", "Varistor", "Fuse", "RC snubber circuit"], e: "RC circuits limit the rate of voltage rise." },
+            { id: 10, q: "You designed a phase control circuit with SCR but it does not trigger even after applying gate pulses. What is the most probable cause?", a: "Gate current too low compared to IGT", c: ["Snubber too large", "Firing angle too small", "Load resistance too high", "Gate current too low compared to IGT"], e: "Gate current must exceed IGT threshold for triggering." },
+            { id: 11, q: "Which is NOT a typical application of PUT?", a: "High-gain current amplifier", c: ["Relaxation oscillator", "Time delay circuits", "Triggering SCR", "High-gain current amplifier"], e: "PUT is a switching device, not a linear amplifier." },
+            { id: 12, q: "In a PUT circuit, if gate voltage is kept very close to anode voltage, the device:", a: "Fires at very low voltage", c: ["Will not turn ON", "Fires at very high voltage", "Behaves as diode", "Fires at very low voltage"], e: "Vp = Vg + Vd; if Vg is low, firing voltage is low." },
+            { id: 13, q: "In a fully controlled single-phase bridge SCR rectifier, the input power factor:", a: "Worsens with increasing firing angle", c: ["Independent of firing angle", "Remains constant", "Improves with increasing angle", "Worsens with increasing firing angle"], e: "Displacement between V and I increases with α." },
+            { id: 14, q: "In a single-phase half-wave controlled rectifier using SCR, the average DC output voltage increases when:", a: "Firing angle decreases", c: ["Firing angle decreases", "Load resistance increases", "Load resistance decreases", "Firing angle increases"], e: "Lower α means the SCR conducts for more of the cycle." },
+            { id: 15, q: "Intrinsic stand-off ratio (η) of a UJT typically lies between:", a: "0.2 – 0.6", c: ["0.1 – 0.2", "0.9 – 1.0", "0.6 – 0.9", "0.2 – 0.6"], e: "Standard UJT value range for η." },
+            { id: 16, q: "In high-frequency applications, SCRs are less preferred because:", a: "They have relatively long turn-off time", c: ["Cannot be triggered by gate", "Need continuous current", "Short turn-off time", "They have relatively long turn-off time"], e: "Turn-off time (tq) limits maximum frequency." },
+            { id: 17, q: "The displacement angle (φ) between input voltage and current of a fully-controlled bridge converter is:", a: "Equal to firing angle α", c: ["Always 0°", "Equal to 90° − α", "Independent of firing angle", "Equal to firing angle α"], e: "Idealized fundamental current lags V by α." },
+            { id: 18, q: "When the SCR is forward biased but not triggered by gate pulse, it is said to be in:", a: "Forward blocking mode", c: ["Avalanche mode", "Reverse blocking mode", "Conduction mode", "Forward blocking mode"], e: "Behaves as an open switch despite positive bias." },
+            { id: 19, q: "In an AC phase control circuit using UJT, the firing angle can be adjusted by:", a: "Varying emitter resistor R", c: ["Replacing RB1", "Varying supply voltage", "Changing intrinsic ratio", "Varying emitter resistor R"], e: "Varying R changes the RC time constant for firing." },
+            { id: 20, q: "In a UJT relaxation oscillator, if the timing capacitor is doubled, frequency:", a: "Halves", c: ["Doubles", "Remains unchanged", "Becomes 4x", "Halves"], e: "T = RC; doubling C doubles T, halving f." },
+            { id: 21, q: "If a UJT fails short between B1 and B2, what happens in a relaxation oscillator circuit?", a: "Continuous conduction; no pulse output", c: ["Frequency doubles", "Capacitor never discharges", "Pulses wider", "Continuous conduction; no pulse output"], e: "Short between bases breaks the voltage distribution logic." },
+            { id: 22, q: "What is the recommended gate triggering method for SCRs in power circuits?", a: "Pulse train synchronized with the AC source", c: ["DC triggering only", "Continuous gate current", "Single pulse at 0°", "Pulse train synchronized with the AC source"], e: "Pulse trains reduce power loss and ensure latching." },
+            { id: 23, q: "The amplitude of the trigger pulse from a UJT relaxation oscillator primarily depends on:", a: "Inter-base voltage", c: ["SCR gate requirement", "Intrinsic ratio η", "Charging resistor value", "Inter-base voltage"], e: "Discharge pulse energy depends on peak voltage, tied to Vbb." },
+            { id: 24, q: "The minimum current required to keep SCR conducting immediately after it has just been turned ON is called:", a: "Latching current", c: ["Holding current", "Trigger current", "Peak current", "Latching current"], e: "Latching current maintains state after gate signal removal." },
+            { id: 25, q: "If the anode current in an SCR falls below holding current, what happens?", a: "SCR turns OFF", c: ["Gate current increases", "SCR conducts partially", "SCR remains ON", "SCR turns OFF"], e: "Holding current is the sustaining minimum current." },
 
-        const part2Data = [
-            // Original set 1
-            { q: "What is the open-loop gain when the phase lag drives the system to the brink of instability?", a: "Equal to 1", e: "Barkhausen criterion for sustained oscillations.", c: ["Greater than 1", "Equal to 1", "Equal to 0", "Infinite"] },
-            { q: "What is used to pass the data value from the register file input to the specified register address?", a: "Decoder", e: "Decoders select a specific line based on an address input.", c: ["Multiplexer", "Decoder", "Encoder", "Buffer"] },
-            { q: "What is the output of a NOT gate when the input is HIGH?", a: "LOW", e: "NOT is an inverter.", c: ["HIGH", "LOW", "Undefined", "Oscillating"] },
-            { q: "How many input lines can a multiplexer with 5 selection (control) lines handle?", a: "32", e: "2^n where n is select lines. 2^5 = 32.", c: ["16", "32", "64", "128"] },
-            { q: "What is a major drawback of parasitic capacitances in high-frequency FET amplifiers?", a: "They reduce bandwidth as frequency increases", e: "Parasitic capacitance creates low-pass filtering effects.", c: ["Increased gain", "Improved linearity", "They reduce bandwidth as frequency increases", "Increased power handling"] },
-            { q: "Which register typically holds the address of the next instruction to execute in a CPU?", a: "Program Counter (PC)", e: "The PC points to the memory location of the next opcode.", c: ["Instruction Register", "Memory Address Register", "Program Counter (PC)", "Accumulator"] },
-            { q: "Which gate can be used to implement any Boolean function by itself?", a: "NOR gate", e: "NAND and NOR are universal gates.", c: ["AND gate", "OR gate", "NOR gate", "XOR gate"] },
-            { q: "In a microprocessor, which component performs arithmetic operations while reading instructions and generating control signals for other parts of the system?", a: "Control Unit (CU)", e: "The Control Unit handles instruction decoding and signal generation.", c: ["Arithmetic Logic Unit (ALU)", "Control Unit (CU)", "Register file", "Cache memory"] },
-            { q: "To define the system's poles, what values of “s” will cause the denominator of a transfer function to be equal to zero?", a: "The system’s zeros", e: "Note: In many exam keys, this definition is specifically associated with Zeros for this version of the question.", c: ["The system’s zeros", "The system’s poles", "The gain constant", "The initial conditions"] },
-            { q: "What refers to a method where the microprocessor repeatedly checks the status of a device?", a: "Polling", e: "Software checks status register in a loop.", c: ["Interrupt handling", "Polling", "DMA transfer", "Handshaking"] },
-            { q: "Which logic gate outputs HIGH only when all its inputs are HIGH?", a: "AND gate", e: "Logical product behavior.", c: ["OR gate", "NAND gate", "AND gate", "NOR gate"] },
-            { q: "What defines the gain margin of a system?", a: "Open-loop gain at phase crossover frequency", e: "Reciprocal of the gain where phase is -180°.", c: ["Phase at unity gain frequency", "Closed-loop gain at crossover frequency", "Open-loop gain at phase crossover frequency", "Difference between input and output gain"] },
-            { q: "The frequency response of a system describes how the system attenuates at:", a: "All various frequencies", e: "Covers the entire spectrum.", c: ["Only low frequencies", "Only high frequencies", "A single frequency", "All various frequencies"] },
-            { q: "Which condition forces the microprocessor to pause its current task, execute a different task, and then resume the original task?", a: "Interrupt", e: "A signal requiring immediate attention.", c: ["Reset", "Interrupt", "Clock cycle", "Hold"] },
-            { q: "What is the data storage capacity of a 32-bit register?", a: "32 bits", e: "Directly equals bit capacity.", c: ["16 bits", "24 bits", "32 bits", "64 bits"] },
-            { q: "Which of the following best describes the frequency response of a system?", a: "Variation of gain and phase with frequency", e: "Magnitude and phase across domains.", c: ["Variation of output with time", "Variation of gain and phase with frequency", "Only phase variation", "Only magnitude variation"] },
-            { q: "How many input lines can a multiplexer with 3 control signals select from?", a: "8", e: "2^3 = 8.", c: ["4", "6", "8", "16"] },
-            { q: "Where must the poles of the transfer function be located in the complex plane for a system to remain stable?", a: "Left half-plane", e: "Right-half plane poles represent instability.", c: ["Right half-plane", "On the imaginary axis only", "Left half-plane", "Anywhere in the s-plane"] },
-            { q: "What is the size (in bits) of a byte?", a: "8 bits", e: "Standard byte definition.", c: ["4 bits", "8 bits", "16 bits", "32 bits"] },
-            { q: "What determines a system's steady-state behavior when subjected to a sinusoidal input?", a: "Frequency response", e: "Predicts long-term sinusoidal output.", c: ["Initial conditions", "Transient response", "Frequency response", "Natural response"] },
-            { q: "In control systems, what does a pole near the imaginary axis in the s-plane indicate?", a: "Slow decay of the transient response", e: "Proximity to axis means low damping.", c: ["Fast decay of transient response", "Slow decay of the transient response", "Instability always", "Infinite gain"] },
-            { q: "All of the following are microarchitectural registers that are programmer-visible, except:", a: "Random Access Memory Data Register", e: "The MDR/MBR are internal registers.", c: ["Accumulator", "Program Counter", "Stack Pointer", "Random Access Memory Data Register"] },
-            { q: "Which of the following is a key difference between DRAM and SRAM?", a: "DRAM is slower; SRAM is faster", e: "SRAM uses latches; DRAM uses capacitors.", c: ["DRAM is faster than SRAM", "SRAM requires refreshing", "DRAM is slower; SRAM is faster", "Both have identical speed"] },
-            { q: "What does the Bode plot represent in frequency response analysis?", a: "Phase and magnitude", e: "Logarithmic gain and phase vs frequency.", c: ["Time and amplitude of the response", "Phase and magnitude", "Voltage and current", "Power and efficiency"] },
-            { q: "Which component of a system’s total response is influenced by initial conditions?", a: "Transient response", e: "Determined by initial energy states.", c: ["Steady-state response", "Transient response", "Frequency response", "Forced response"] },
-            
-            // New set of 25 questions
-            { q: "In a band-pass filter, frequency response refers to:", a: "Maximum within the frequency band and zero outside it", e: "A band-pass filter ideally lets a specific range of frequencies pass through while attenuating others.", c: ["Maximum within the frequency band and zero outside it", "Attenuation of the center frequency only", "Attenuation of all frequencies equally", "The attenuation of only the center frequency"] },
-            { q: "If the resistor value in the RC network of a PUT timing circuit is increased, how will this affect the triggering time?", a: "It will trigger later", e: "Increasing R in an RC network increases the time constant (τ = RC), making the capacitor charge slower.", c: ["It will not trigger", "It will trigger slowly", "It will trigger later", "It will trigger instantly"] },
-            { q: "Which electroacoustic transducer converts electrical charges generated by certain solid materials into energy?", a: "Piezoelectric transducer", e: "Piezoelectric materials generate a voltage when subject to mechanical stress.", c: ["Dynamic microphone", "Electromagnetic transducer", "Piezoelectric transducer", "Carbon microphone"] },
-            { q: "What is the primary function of an Analog-to-Digital Converter (ADC)?", a: "To convert analog signals to digital signals", e: "ADCs sample continuous signals and convert them to discrete binary representations.", c: ["To amplify analog signals", "To filter digital signals", "To convert digital signals to analog signals", "To convert analog signals to digital signals"] },
-            { q: "Which type of transducer requires an external power source to function?", a: "Strain gauge", e: "Active transducers like strain gauges need external excitation (power) to operate.", c: ["Photovoltaic cell", "Piezoelectric sensor", "Thermocouple", "Strain gauge"] },
-            { q: "What type of counter can be implemented using a T flip-flop?", a: "Divide-by-2 counter", e: "A single T flip-flop toggles its output every clock pulse, effectively dividing the frequency by 2.", c: ["Divide-by-2 counter", "Johnson counter", "Ring counter", "Mod-10 counter"] },
-            { q: "The output of a 3-input AND gate equals one when:", a: "All three inputs are 1", e: "An AND gate requires all inputs to be high (1) for a high output.", c: ["All three inputs are 0", "All three inputs are 1", "At least one input is 1", "At least two inputs are 1"] },
-            { q: "What is the primary function of a transducer?", a: "To convert one form of energy into another", e: "Transducers convert physical quantities (like pressure) into electrical signals or vice-versa.", c: ["To amplify electrical signals", "To filter noise from signals", "To convert one form of energy into another", "To store electrical energy"] },
-            { q: "Which circuit provides a constant current that mirrors the reference current?", a: "Current mirror", e: "A current mirror uses transistor characteristics to replicate a reference current in another branch.", c: ["Differential amplifier", "Current mirror", "Schmitt trigger", "Voltage divider"] },
-            { q: "What is the main difference between a latch and a flip-flop?", a: "Latches are level-triggered, flip-flops are edge-triggered", e: "Flip-flops change state only on the clock edge, while latches are transparent during the entire active level.", c: ["Latches are edge-triggered, flip-flops are level-triggered", "Flip-flops cannot store data, latches can", "Latches have clock input, flip-flops do not", "Latches are level-triggered, flip-flops are edge-triggered"] },
-            { q: "What primarily causes the gradual decrease in gain at high frequencies in a BJT amplifier?", a: "Internal capacitance", e: "Parasitic internal capacitances of the transistor (Cbe, Cbc) act as low-pass filters.", c: ["Coupling capacitors", "Load resistance", "Internal capacitance", "Biasing resistors"] },
-            { q: "What is the primary function of a current mirror circuit?", a: "To copy (mirror) a reference current to another branch", e: "Used widely in ICs to bias various stages from a single reference source.", c: ["To store charge temporarily", "To amplify voltage signals", "To filter noise from a signal", "To copy (mirror) a reference current to another branch"] },
-            { q: "Which component is typically used to set the reference current in a current mirror circuit?", a: "Resistor", e: "I_ref = (Vcc - Vbe) / R_ref.", c: ["Diode", "Inductor", "Capacitor", "Resistor"] },
-            { q: "In a basic current mirror circuit, the output current is primarily determined by:", a: "The base-emitter voltage", e: "Since Vbe1 = Vbe2, the collector currents are matched (neglecting Early effect).", c: ["The supply voltage", "The base-emitter voltage", "The collector-emitter voltage", "The transistor’s current gain (β)"] },
-            { q: "What is the primary factor that restricts the bandwidth of a common-emitter BJT amplifier?", a: "Internal capacitance", e: "Specifically the Miller capacitance effect on the input terminal.", c: ["Internal capacitance", "Junction resistance", "Emitter resistance", "Load resistor"] },
-            { q: "In a BJT operating in the active region, the base-emitter junction is:", a: "Forward biased", e: "For NPN active mode: B-E is Forward biased, B-C is Reverse biased.", c: ["Open circuit", "Forward biased", "Reverse biased", "Not biased"] },
-            { q: "Piezoelectric transducers convert:", a: "Mechanical energy into electrical energy", e: "Direct piezoelectric effect: Pressure/vibration creates voltage.", c: ["Mechanical energy into electrical energy", "Electrical energy into mechanical energy", "Chemical energy into electrical energy", "Thermal energy into mechanical energy"] },
-            { q: "In the design of a high-frequency BJT amplifier, which factor primarily influences the overall gain-bandwidth product?", a: "Collector-emitter capacitance", e: "Capacitance values determine the upper cutoff frequency and thus the GBP.", c: ["Load resistor", "Emitter resistance", "Coupling capacitor", "Collector-emitter capacitance"] },
-            { q: "What is a key characteristic of a Programmable Unijunction Transistor (PUT)?", a: "Its trigger voltage can be adjusted by external resistors", e: "The peak voltage (Vp) is 'programmed' via a resistor divider on the gate.", c: ["It is used exclusively as a power amplifier", "It has a fixed intrinsic stand-off ratio", "Its trigger voltage can be adjusted by external resistors", "It only works as a diode"] },
-            { q: "Which of the following parameters of an ADC determines the smallest change in analog input that can be detected?", a: "Resolution", e: "Resolution is the number of discrete steps the ADC can produce over its range.", c: ["Input impedance", "Quantization noise", "Resolution", "Sampling rate"] },
-            { q: "Which region of a BJT acts as the control terminal?", a: "Base", e: "The small base current controls the much larger collector current.", c: ["Substrate", "Collector", "Emitter", "Base"] },
-            { q: "According to the Barkhausen criterion, the loop gain to provide oscillation must be:", a: "Equal to or greater than 1", e: "At exactly 1 it sustains; during startup it must be slightly > 1.", c: ["Greater than 1", "Less than 1", "Equal to or greater than 1", "Equal to 1"] },
-            { q: "Which factor most directly impacts the resolution of an ADC in a data acquisition system?", a: "Number of bits", e: "Resolution = V_range / (2^n - 1), where n is the number of bits.", c: ["Signal bandwidth", "Input impedance", "Number of bits", "Conversion time"] },
-            { q: "In a Programmable Unijunction Transistor (PUT), the gate terminal is connected to:", a: "The control terminal that sets the trigger voltage", e: "The gate is biased at a specific potential to set the threshold for firing.", c: ["The base of a bipolar junction transistor", "The emitter terminal", "The collector terminal", "The control terminal that sets the trigger voltage"] },
-            { q: "What type of charge carriers are responsible for current flow in an NPN transistor?", a: "Electrons only", e: "While holes exist in the base, electrons are the primary majority carriers crossing the junctions.", c: ["Holes only", "Electrons only", "Both electrons and holes equally", "Neither electrons nor holes"] }
+            // Batch 2 (26-50) - First set of added questions
+            { id: 26, q: "Which factor MOSTLY affects the response time of a photodiode?", a: "The capacitance of the depletion layer of the photodiode", c: ["Series resistance of the leads", "The capacitance of the depletion layer of the photodiode", "Ambient temperature only", "Load resistor tolerance"], e: "Depletion layer capacitance limits switching speed." },
+            { id: 27, q: "Which filter is characterized by a maximally flat response in the passband?", a: "Butterworth filter", c: ["Chebyshev filter", "Elliptic filter", "Butterworth filter", "Bessel filter"], e: "Butterworth filters provide uniform gain in the passband." },
+            { id: 28, q: "What happens to the capacitance of a capacitor if the distance between the plates decreases?", a: "Capacitance increases", c: ["Capacitance decreases", "Capacitance increases", "Capacitance stays the same", "Capacitance becomes zero"], e: "C = εA/d; d and C are inversely proportional." },
+            { id: 29, q: "Which factor has the greatest influence on ripple voltage in an unregulated DC power supply?", a: "Size of the filter capacitor", c: ["Transformer turns ratio", "Diode forward voltage", "Size of the filter capacitor", "Wire resistance in the load"], e: "Capacitor size determines the discharge rate between peaks." },
+            { id: 30, q: "How many T flip-flops are required to construct a decade (mod-10) counter?", a: "4", c: ["3", "4", "5", "10"], e: "4 bits cover up to 16 states, enough for 10." },
+            { id: 31, q: "Which type of filter is used to eliminate a specific frequency or a narrow range of frequencies?", a: "Notch filter", e: "Notch filters are sharp band-stop filters.", c: ["Band-pass filter", "Notch filter", "High-pass filter", "All-pass filter"] },
+            { id: 32, q: "Why do superconductors have no energy loss when conducting electricity?", a: "Because they have zero resistance", c: ["Because current is very small", "Because they have zero resistance", "Because voltage is constant", "Because they operate only at low frequency"], e: "Zero resistance means no power loss ($I^2R = 0$)." },
+            { id: 33, q: "What is used to improve the frequency response at high frequencies in an operational amplifier?", a: "Compensation capacitor", c: ["Coupling capacitor", "Bypass capacitor", "Compensation capacitor", "Timing capacitor"], e: "Internal compensation stabilizes high frequency response." },
+            { id: 34, q: "What is ladder logic programming in a PLC system?", a: "A graphical or visual representation of controlling processes and equipment", c: ["Machine-level binary", "A graphical representation", "A wiring diagram only", "Simulation waveform"], e: "Visual language based on relay diagrams." },
+            { id: 35, q: "Which of the following are optoelectronic devices?", a: "Solar cell, photodiode, LED", c: ["Solar cell, photodiode, LED", "Zener, SCR, TRIAC", "MOSFET, BJT, JFET", "Resistor, capacitor"], e: "Devices interacting with light and electricity." },
+            { id: 36, q: "What is the term for the temperature below which a material becomes superconducting?", a: "Critical temperature", c: ["Threshold temperature", "Curie temperature", "Critical temperature", "Breakdown temperature"], e: "The phase transition temperature Tc." },
+            { id: 37, q: "What is the effect of removing the emitter bypass capacitor in a BJT amplifier?", a: "The voltage gain decreases", c: ["Gain increases", "Voltage gain decreases", "Impedance becomes zero", "Voltage becomes constant"], e: "Increases negative feedback, reducing gain." },
+            { id: 38, q: "If the emitter current in the unijunction transistor increases, the junction resistance _____ and the emitter voltage _____.", a: "decreases; decreases", c: ["increases; increases", "decreases; decreases", "increases; decreases", "remains constant"], e: "Negative resistance region characteristic." },
+            { id: 39, q: "What happens when the emitter current of a Uni-Junction Transistor (UJT) decreases?", a: "The valley current decreases", c: ["Peak current increases", "Valley current decreases", "Resistance increases", "Oscillation stops"], e: "Linked to the UJT characteristic curve properties." },
+            { id: 40, q: "What happens to the emitter voltage as the emitter current increases past the peak point?", a: "It decreases (negative resistance region)", c: ["Increases linearly", "Remains constant", "It decreases (negative resistance region)", "Becomes zero"], e: "Voltage drops as current rises in this region." },
+            { id: 41, q: "In a high-pass filter, what refers to the frequency where the output drops by 3 dB?", a: "Cutoff frequency", c: ["Resonant frequency", "Cutoff frequency", "Break frequency", "Damping frequency"], e: "Standard definition of the filter corner." },
+            { id: 42, q: "Which electronic component functions like two SCRs connected in reverse parallel for bidirectional AC operation?", a: "TRIAC", c: ["DIAC", "TRIAC", "UJT", "MOSFET"], e: "Triode for Alternating Current (TRIAC)." },
+            { id: 43, q: "In port-mapped I/O, how is the I/O address space handled?", a: "Completely separate from memory", c: ["Shared with program memory", "Completely separate from memory", "Combined with cache", "Assigned randomly"], e: "Dedicated address space for I/O ports." },
+            { id: 44, q: "What kind of filter is typically formed when a pole is placed far from the unit circle (closer to the origin) in the z-plane?", a: "Broad (less selective) filter", c: ["Selective narrow filter", "Broad (less selective) filter", "Oscillatory unstable", "All-pass"], e: "Proximity to center implies lower resonance." },
+            { id: 45, q: "Which amplifier is preferred for low input impedance and high-frequency applications?", a: "Common Gate FET Amplifier", c: ["Common emitter", "Common collector", "Common Gate FET Amplifier", "Differential"], e: "CG configuration has low impedance and no Miller effect." },
+            { id: 46, q: "Which device controls a system’s function using a pre-programmed internal logic?", a: "Programmable Logic Controller (PLC)", c: ["Microprocessor only", "Programmable Logic Controller (PLC)", "Op-amp", "Multiplexer"], e: "PLCs are designed for industrial logic control." },
+            { id: 47, q: "Which of the following is an advantage of an SMPS over a linear power supply?", a: "Higher efficiency and lower heat dissipation", c: ["Simpler design", "Higher efficiency and lower heat dissipation", "Lower noise", "Larger size"], e: "Efficiency due to switching vs linear regulation." },
+            { id: 48, q: "What happens to the capacitive reactance Xc as the frequency increases?", a: "It decreases", c: ["It increases", "It decreases", "Remains constant", "Inductive"], e: "$Xc = 1/(2\pi fC)$." },
+            { id: 49, q: "What does Lenz’s Law state about the direction of induced current?", a: "It opposes the change in magnetic flux that produced it", c: ["Flows in same direction", "It opposes the change in magnetic flux that produced it", "Always clockwise", "Depends on coil R"], e: "Law of electromagnetic induction direction." },
+            { id: 50, q: "Which of the following is a non-permanent (volatile) memory?", a: "RAM", c: ["EEPROM", "Flash memory", "RAM", "ROM"], e: "RAM loses data when power is off." },
+
+            // Batch 3 (51-75) - Latest set of questions
+            { id: 51, q: "In high-frequency analysis of a BJT amplifier, what does the time constant represent?", a: "The charge storage time in the base", c: ["Thermal stability", "The charge storage time in the base", "Collector delay", "Power limit"], e: "Base charge storage limits switching speed." },
+            { id: 52, q: "What component is primarily used to stabilize the output voltage of a linear power supply?", a: "Voltage regulator", c: ["Bridge rectifier", "Voltage regulator", "Filter inductor", "Isolation transformer"], e: "Regulators hold voltage constant under load." },
+            { id: 53, q: "Which logic gate can be used to implement all other basic logic gates?", a: "NAND gate", c: ["XOR gate", "NOR gate", "NAND gate", "AND gate"], e: "NAND is a universal gate." },
+            { id: 54, q: "Which design tool helps in project planning and implementation by illustrating the steps a program must follow?", a: "Flowchart", c: ["Timing diagram", "Flowchart", "Block diagram", "Truth table"], e: "Flowcharts map procedural logic." },
+            { id: 55, q: "What is the primary function of a varistor in an electrical circuit?", a: "To regulate voltage by changing resistance with voltage", c: ["Store charge", "Regulate voltage by changing resistance with voltage", "Amplify signals", "Constant current"], e: "Non-linear resistance for surge protection." },
+            { id: 56, q: "Which transistor terminal controls the flow of current between the other two terminals?", a: "Base", c: ["Collector", "Base", "Emitter", "Substrate"], e: "Base current regulates collector-emitter current." },
+            { id: 57, q: "What happens to the output impedance of a BJT amplifier if the collector resistance increases?", a: "It increases", c: ["It decreases", "It increases", "It remains constant", "It becomes zero"], e: "Zout is proportional to Rc in parallel with ro." },
+            { id: 58, q: "What is commonly used to cool superconductors to their critical temperature?", a: "Liquid nitrogen", c: ["Dry ice", "Liquid nitrogen", "Distilled water", "Mineral oil"], e: "Used for high-temp superconductivity cooling." },
+            { id: 59, q: "What is the primary advantage of using a Schottky diode over silicon diodes?", a: "Lower conduction losses", c: ["Higher breakdown", "Lower conduction losses", "Larger junction C", "Higher reverse leakage"], e: "Low forward voltage drop ($0.3V$)." },
+            { id: 60, q: "Which type of memory is built into the chip but is not classified as a register?", a: "Cache memory", c: ["RAM", "Cache memory", "EEPROM", "Virtual memory"], e: "On-chip SRAM for data caching." },
+            { id: 61, q: "What is the instruction set of the microprocessor that is converted into binary?", a: "Machine language", c: ["Assembly", "Machine language", "High-level", "Microcode comments"], e: "The raw binary executed by hardware." },
+            { id: 62, q: "What is the normal operating condition of the base-emitter diode in a Bipolar Junction Transistor (BJT)?", a: "Forward-biased", c: ["Reverse-biased", "Forward-biased", "Zero-biased", "Alternately biased"], e: "Required for active and saturation regions." },
+            { id: 63, q: "What is the primary function of a potentiometer?", a: "Act as a variable voltage divider", c: ["Fixed resistor", "Act as a variable voltage divider", "Store energy", "Limit current only"], e: "Three-terminal adjustable voltage divider." },
+            { id: 64, q: "The Ampere-Maxwell Law modifies Ampere’s Law by adding which term?", a: "Electric displacement current", c: ["Magnetic flux density", "Electric displacement current", "Conduction density", "Permeability"], e: "Maxwell added displacement current for capacitors." },
+            { id: 65, q: "How does a 2-input NAND gate determine its output based on the given inputs?", a: "The output is 1 when both inputs are 0", c: ["Output is 1 when any input is 1", "Output is 1 only when both inputs are 1", "The output is 1 when both inputs are 0", "Complement of AND"], e: "NAND output is high unless both inputs are high." },
+            { id: 66, q: "A JK flip-flop with inputs J and K tied together operates as:", a: "T flip-flop", c: ["SR flip-flop", "T flip-flop", "D flip-flop", "Master-slave"], e: "Toggle behavior when J=K." },
+            { id: 67, q: "According to Gauss’s Law for electricity (Maxwell’s first equation), the electric field is directly related to which of the following?", a: "Free charge distribution", c: ["Magnetic density", "Free charge distribution", "Electric potential", "Current density"], e: "$\nabla \cdot E = \rho/\epsilon_0$." },
+            { id: 68, q: "Which type of memory can be re-written but must be physically removed from the circuit for erasure and reprogramming?", a: "EEPROM", c: ["Flash", "EEPROM", "EPROM", "SRAM"], e: "Classic EEPROM (Electrically Erasable Programmable Read-Only Memory)." },
+            { id: 69, q: "Which type of flip-flop is used to construct a 4-bit ring counter?", a: "T flip-flop", c: ["D flip-flop", "JK flip-flop", "T flip-flop", "SR latch"], e: "Often used for toggle or shift logic in counters." },
+            { id: 70, q: "Which system provides instructions to the computer during the boot-up process?", a: "Basic Input/Output System", c: ["OS kernel", "Basic Input/Output System", "Firmware", "Device driver"], e: "BIOS initializes hardware during boot." },
+            { id: 71, q: "The output of an XOR gate equals one when:", a: "Inputs are different", c: ["Both inputs 0", "Both inputs 1", "Inputs are different", "Inputs inverted"], e: "High output for unique inputs." },
+            { id: 72, q: "What happens to the voltage gain of an amplifier under no-load condition (open circuit) and zero source resistance (Rs = 0)?", a: "It is at its highest value", c: ["It becomes zero", "It decreases significantly", "It is at its highest value", "It oscillates"], e: "Gain is maximum when not loaded." },
+            { id: 73, q: "A transistor is in saturation mode when:", a: "The transistor is fully conductive between emitter and collector", c: ["BE reverse biased", "The transistor is fully conductive", "Only leakage flows", "Collector current 0"], e: "Fully ON state." },
+            { id: 74, q: "What is the primary application of a Uni-Junction Transistor (UJT)?", a: "Oscillator and triggering circuits", c: ["Voltage regulation", "Oscillator and triggering circuits", "Power amplification", "Frequency multiplication"], e: "Used for timing and pulse triggering." },
+            { id: 75, q: "Which component is used to vary the measurement of resistance in a circuit?", a: "Rheostat", c: ["Potentiometer", "Thermistor", "Rheostat", "Varistor"], e: "A two-terminal variable resistor for current control." }
         ];
 
         let questions = [];
         let currentIndex = 0;
         let score = 0;
-        let canAnswer = true;
-        let userResponses = [];
+        let userResponses = {};
 
-        function shuffle(array) {
-            return array.sort(() => Math.random() - 0.5);
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
         }
 
-        function showMenu() {
-            document.getElementById('main-menu').classList.remove('hidden');
-            document.getElementById('quiz-container').classList.add('hidden');
+        function startQuiz(shuffle) {
+            questions = JSON.parse(JSON.stringify(rawQuestions));
+            if (shuffle) shuffleArray(questions);
+            currentIndex = 0; score = 0; userResponses = {};
+            document.getElementById('landing-screen').classList.add('hidden');
             document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('review-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            showQuestion();
         }
 
-        function startQuiz(part) {
-            const data = (part === 'part1') ? part1Data : part2Data;
-            questions = JSON.parse(JSON.stringify(data));
-            shuffle(questions);
-            questions.forEach(q => { q.choices = shuffle([...q.c]); });
-            
-            currentIndex = 0;
-            score = 0;
-            userResponses = [];
-            
-            document.getElementById('main-menu').classList.add('hidden');
-            document.getElementById('quiz-container').classList.remove('hidden');
-            renderQuestion();
+        function resetQuiz() {
+            currentIndex = 0; score = 0; userResponses = {};
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            showQuestion();
         }
 
-        function renderQuestion() {
+        function previousQuestion() { if (currentIndex > 0) { currentIndex--; showQuestion(); } }
+
+        function shuffleRemaining() {
+            if (userResponses[questions[currentIndex].id]) return;
+            const remaining = questions.slice(currentIndex);
+            shuffleArray(remaining);
+            questions.splice(currentIndex, remaining.length, ...remaining);
+            showQuestion();
+        }
+
+        function showQuestion() {
             const q = questions[currentIndex];
-            const prev = userResponses[currentIndex];
-            
-            document.getElementById('progress-text').innerText = `Question ${currentIndex + 1} / ${questions.length}`;
-            document.getElementById('score-text').innerText = `Score: ${score}`;
-            document.getElementById('progress-bar').style.width = `${((currentIndex) / questions.length) * 100}%`;
-            document.getElementById('question-text').innerText = q.q;
-            document.getElementById('prev-btn').disabled = currentIndex === 0;
+            const total = questions.length;
+            document.getElementById('progress').style.width = `${(currentIndex / total) * 100}%`;
+            document.getElementById('score-display').innerText = `Score: ${score}/${total}`;
+            document.getElementById('prev-btn').disabled = (currentIndex === 0);
+            document.getElementById('question-text').textContent = q.q;
             
             const container = document.getElementById('options-container');
             container.innerHTML = '';
-            
-            if (prev) {
-                canAnswer = false;
-                document.getElementById('feedback').classList.remove('hidden');
-                document.getElementById('explanation-text').innerText = q.e;
-                q.choices.forEach(choice => {
-                    const btn = createOptionBtn(choice);
-                    btn.disabled = true;
-                    if (choice.trim() === q.a.trim()) btn.classList.add('correct');
-                    else if (choice === prev.selected && !prev.isCorrect) btn.classList.add('incorrect');
-                    container.appendChild(btn);
-                });
-            } else {
-                canAnswer = true;
-                document.getElementById('feedback').classList.add('hidden');
-                q.choices.forEach(choice => {
-                    const btn = createOptionBtn(choice);
-                    btn.onclick = () => handleAnswer(choice, btn);
-                    container.appendChild(btn);
-                });
-            }
-        }
 
-        function createOptionBtn(text) {
-            const btn = document.createElement('button');
-            btn.className = "option-btn w-full text-left p-5 bg-white text-purple-800 font-bold text-sm shadow-sm";
-            btn.innerText = text;
-            return btn;
+            // Get choices and shuffle them once
+            if (!q.shuffledChoices) {
+                q.shuffledChoices = [...q.c];
+                shuffleArray(q.shuffledChoices);
+            }
+
+            const existingResponse = userResponses[q.id];
+            q.shuffledChoices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn glass-card p-5 text-left text-lg font-medium';
+                btn.innerText = choice;
+                if (existingResponse) {
+                    btn.disabled = true;
+                    if (choice === q.a) btn.classList.add('correct');
+                    if (choice === existingResponse.choice && choice !== q.a) btn.classList.add('incorrect');
+                } else {
+                    btn.onclick = () => handleAnswer(choice, btn);
+                }
+                container.appendChild(btn);
+            });
+
+            if (existingResponse) showExplanation(existingResponse.isCorrect);
+            else document.getElementById('explanation-container').classList.add('hidden');
         }
 
         function handleAnswer(choice, btn) {
-            if (!canAnswer) return;
-            canAnswer = false;
             const q = questions[currentIndex];
-            const isCorrect = (choice.trim() === q.a.trim());
-            
-            userResponses[currentIndex] = {
-                selected: choice,
-                isCorrect: isCorrect,
-                question: q.q,
-                correctAnswer: q.a,
-                explanation: q.e
-            };
-            
+            const isCorrect = (choice === q.a);
+            userResponses[q.id] = { choice, isCorrect };
             if (isCorrect) score++;
-            
-            const buttons = document.querySelectorAll('.option-btn');
-            buttons.forEach(b => {
-                b.disabled = true;
-                if (b.innerText.trim() === q.a.trim()) b.classList.add('correct');
-                else if (b === btn && !isCorrect) b.classList.add('incorrect');
-            });
-            
+            showQuestion();
+        }
+
+        function showExplanation(isCorrect) {
+            const q = questions[currentIndex];
+            const fb = document.getElementById('feedback-label');
+            fb.innerText = isCorrect ? "Correct! ✨" : "Incorrect";
+            fb.className = isCorrect ? "font-bold text-lg text-green-600" : "font-bold text-lg text-red-600";
             document.getElementById('explanation-text').innerText = q.e;
-            document.getElementById('feedback').classList.remove('hidden');
-            document.getElementById('score-text').innerText = `Score: ${score}`;
+            document.getElementById('explanation-container').classList.remove('hidden');
         }
 
-        function prevQuestion() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                renderQuestion();
-            }
-        }
-
-        document.getElementById('next-btn').onclick = () => {
+        function nextQuestion() {
             currentIndex++;
-            if (currentIndex < questions.length) renderQuestion();
+            if (currentIndex < questions.length) showQuestion();
             else showResults();
-        };
+        }
 
         function showResults() {
-            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.add('hidden');
             document.getElementById('results-screen').classList.remove('hidden');
-            
-            const percent = Math.round((score / questions.length) * 100);
-            document.getElementById('final-percentage').innerText = `${percent}%`;
-            document.getElementById('final-score').innerText = `Great job! You got ${score} out of ${questions.length} correct.`;
-            
-            const mistakes = userResponses.filter(r => r && !r.isCorrect);
-            const reviewBtn = document.getElementById('review-mistakes-btn');
-            if (mistakes.length > 0) {
-                reviewBtn.classList.remove('hidden');
-                populateReview(mistakes);
-            } else reviewBtn.classList.add('hidden');
+            document.getElementById('final-score').innerText = `${score}/${questions.length}`;
+            const pct = (score / questions.length) * 100;
+            document.getElementById('result-message').innerText = pct >= 80 ? "Great job!" : "Keep studying!";
         }
 
-        function populateReview(mistakes) {
-            const container = document.getElementById('mistakes-container');
-            container.innerHTML = '';
-            mistakes.forEach(m => {
-                const div = document.createElement('div');
-                div.className = "glass-card p-6 border-l-8 border-l-red-400";
-                div.innerHTML = `
-                    <p class="font-bold text-purple-900 mb-3">${m.question}</p>
-                    <div class="flex flex-col gap-2 mb-4">
-                        <span class="text-xs font-bold text-red-500 uppercase">Your Answer</span>
-                        <span class="p-3 bg-red-50 rounded-xl text-red-700 text-sm">${m.selected}</span>
-                        <span class="text-xs font-bold text-green-600 uppercase mt-2">Correct Answer</span>
-                        <span class="p-3 bg-green-50 rounded-xl text-green-700 text-sm font-bold">${m.correctAnswer}</span>
-                    </div>
-                    <p class="text-xs text-purple-400 leading-relaxed">${m.explanation}</p>
-                `;
-                container.appendChild(div);
+        function showReview() {
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('review-screen').classList.remove('hidden');
+            const list = document.getElementById('mistakes-list');
+            list.innerHTML = '';
+            questions.forEach(q => {
+                const res = userResponses[q.id];
+                if (res && !res.isCorrect) {
+                    const card = document.createElement('div');
+                    card.className = 'glass-card p-6 text-left border-l-8 border-red-400';
+                    card.innerHTML = `<div class="font-bold text-lg">${q.q}</div>
+                        <div class="text-sm"><span class="text-red-500">You: ${res.choice}</span><br>
+                        <span class="text-green-600 font-bold">Correct: ${q.a}</span></div>`;
+                    list.appendChild(card);
+                }
             });
         }
 
-        function toggleReview() {
-            const section = document.getElementById('review-section');
-            section.classList.toggle('hidden');
-            if (!section.classList.contains('hidden')) section.scrollIntoView({ behavior: 'smooth' });
+        function goBack() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('review-screen').classList.add('hidden');
+            document.getElementById('landing-screen').classList.remove('hidden');
         }
     </script>
 </body>
