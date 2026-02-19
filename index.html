@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electronics Comprehensive Reviewer</title>
+    <title>Electronics Reviewer - Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Plus+Jakarta+Sans', sans-serif;
             background: linear-gradient(135deg, #f0f0ff 0%, #e0e0ff 100%);
             min-height: 100vh;
             color: #4a4a8a;
@@ -36,20 +36,19 @@
                 </svg>
             </div>
         </div>
-        <h1 class="text-4xl md:text-5xl font-bold text-[#5b21b6]">Master Electronics ✨</h1>
-        <p class="text-purple-600 font-medium">122 Questions Covering SCRs, PLCs, Circuits, and More</p>
-        <div class="space-y-4 pt-4">
+        <h1 class="text-4xl md:text-5xl font-bold text-[#5b21b6]">Go, Future Engineer! ✨</h1>
+        <div class="space-y-4 pt-8">
             <button onclick="startQuiz(false)" class="glass-card w-full py-6 px-8 flex justify-between items-center hover:bg-purple-50 transition-colors group">
                 <div class="text-left">
-                    <div class="text-xl font-bold text-purple-900">Standard Review</div>
-                    <div class="text-sm text-purple-500">Chronological Order</div>
+                    <div class="text-xl font-bold text-purple-900">RC Exams: Part 01</div>
+                    <div class="text-sm text-purple-500">Full Set: 75 Questions</div>
                 </div>
                 <span class="bg-purple-100 text-purple-600 px-4 py-1 rounded-full text-sm font-bold group-hover:bg-purple-200">Start</span>
             </button>
             <button onclick="startQuiz(true)" class="glass-card w-full py-6 px-8 flex justify-between items-center hover:bg-purple-50 transition-colors group">
                 <div class="text-left">
-                    <div class="text-xl font-bold text-purple-900">Randomized Challenge</div>
-                    <div class="text-sm text-purple-500">Shuffled Question Pool</div>
+                    <div class="text-xl font-bold text-purple-900">Shuffle & Play</div>
+                    <div class="text-sm text-purple-500">Randomized Question Order</div>
                 </div>
                 <span class="bg-indigo-100 text-indigo-600 px-4 py-1 rounded-full text-sm font-bold group-hover:bg-indigo-200">Shuffle</span>
             </button>
@@ -62,8 +61,10 @@
                 <button onclick="goBack()" class="text-purple-600 font-medium flex items-center gap-1 hover:text-purple-800 whitespace-nowrap">Exit</button>
                 <div class="h-4 w-px bg-purple-200"></div>
                 <button id="prev-btn" onclick="previousQuestion()" class="text-purple-500 text-xs md:text-sm font-medium hover:text-purple-700 disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap">Previous</button>
+                <button onclick="resetQuiz()" class="text-purple-500 text-xs md:text-sm font-medium hover:text-purple-700 whitespace-nowrap">Reset</button>
+                <button onclick="shuffleRemaining()" class="text-purple-500 text-xs md:text-sm font-medium hover:text-purple-700 whitespace-nowrap">Shuffle</button>
             </div>
-            <div class="text-purple-900 font-bold bg-white px-3 py-1 rounded-full shadow-sm border border-purple-50 text-xs md:text-base whitespace-nowrap" id="score-display">Score: 0/122</div>
+            <div class="text-purple-900 font-bold bg-white px-3 py-1 rounded-full shadow-sm border border-purple-50 text-xs md:text-base whitespace-nowrap" id="score-display">Score: 0/75</div>
         </div>
         <div class="w-full bg-purple-100 rounded-full h-2">
             <div id="progress" class="progress-bar bg-purple-500 h-2 rounded-full" style="width: 0%"></div>
@@ -73,20 +74,20 @@
             <div id="options-container" class="grid grid-cols-1 gap-4"></div>
             <div id="explanation-container" class="hidden p-6 bg-purple-50 rounded-2xl border border-purple-100 space-y-2">
                 <div id="feedback-label" class="font-bold text-lg"></div>
-                <p id="explanation-text" class="text-gray-700 italic"></p>
-                <button onclick="nextQuestion()" class="mt-4 w-full bg-purple-600 text-white py-3 rounded-xl font-bold hover:bg-purple-700 transition-colors shadow-lg">Next Question</button>
+                <p id="explanation-text" class="text-gray-700"></p>
+                <button onclick="nextQuestion()" class="mt-4 w-full bg-purple-600 text-white py-3 rounded-xl font-bold hover:bg-purple-700 transition-colors shadow-lg">Continue</button>
             </div>
         </div>
     </div>
 
     <div id="results-screen" class="hidden w-full max-w-2xl text-center space-y-8 py-12 fade-in">
         <div class="glass-card p-12 space-y-6">
-            <div class="text-6xl">🏆</div>
-            <h2 class="text-3xl font-bold text-purple-900">Session Complete!</h2>
-            <div class="text-5xl font-black text-purple-600" id="final-score">0/122</div>
+            <div class="text-6xl">🎉</div>
+            <h2 class="text-3xl font-bold text-purple-900">Quiz Completed!</h2>
+            <div class="text-5xl font-black text-purple-600" id="final-score">0/75</div>
             <p id="result-message" class="text-gray-600 italic"></p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6">
-                <button onclick="resetQuiz()" class="bg-purple-600 text-white py-4 rounded-2xl font-bold hover:bg-purple-700">Try Again</button>
+                <button onclick="resetQuiz()" class="bg-purple-600 text-white py-4 rounded-2xl font-bold hover:bg-purple-700">Reset</button>
                 <button onclick="showReview()" id="review-btn" class="bg-white border-2 border-purple-200 text-purple-600 py-4 rounded-2xl font-bold hover:bg-purple-50">Review Mistakes</button>
             </div>
         </div>
@@ -94,20 +95,21 @@
 
     <div id="review-screen" class="hidden w-full max-w-3xl space-y-6 fade-in pb-20">
         <div class="flex items-center justify-between sticky top-4 z-10 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white">
-            <h3 class="text-2xl font-bold text-purple-900">Mistake Review</h3>
+            <h3 class="text-2xl font-bold text-purple-900">Review Mistakes</h3>
             <button onclick="goBack()" class="bg-purple-600 text-white px-6 py-2 rounded-xl font-bold">Done</button>
         </div>
         <div id="mistakes-list" class="space-y-4"></div>
     </div>
 
     <script>
-        const originalPool = [
+        const rawQuestions = [
+            // Batch 1 (1-25) - Original Set
             { id: 1, q: "In a phase-controlled SCR rectifier, increasing firing angle from 30° to 90° will:", a: "Decrease average DC output voltage", c: ["Increase average DC output voltage", "Have no effect on output voltage", "Increase ripple frequency", "Decrease average DC output voltage"], e: "Output voltage is proportional to cos(α). Larger α means less conduction time." },
             { id: 2, q: "A PUT can be used to generate narrow pulses by:", a: "Making capacitor charge slowly but discharge rapidly", c: ["Using inductor in series", "Biasing gate negative", "Making capacitor charge slowly but discharge rapidly", "Increasing gate current beyond IGT"], e: "Relaxation oscillator principle: slow charge, instant discharge." },
             { id: 3, q: "In a controlled rectifier with highly inductive load, overlap angle μ is present. Its effect is:", a: "Output voltage decreases", c: ["Has no effect", "Output current becomes discontinuous", "Output voltage increases", "Output voltage decreases"], e: "Source inductance prevents instant current transfer, dropping average voltage." },
             { id: 4, q: "Which statement is true about an SCS (Silicon Controlled Switch)?", a: "It can be turned on and off using gate signals", c: ["Unidirectional device only", "Bidirectional like TRIAC", "It can be turned on and off using gate signals", "Conducts without gate triggering"], e: "SCS has two gates (anode and cathode gate) for dual control." },
             { id: 5, q: "In equivalent circuit representation, UJT is modeled as:", a: "Two resistors and a PN junction", c: ["A current source only", "A four-layer thyristor", "Two back-to-back diodes", "Two resistors and a PN junction"], e: "Consists of interbase resistance and a single PN junction." },
-            { id: 6, q: "If capacitor value is halved in a PUT relaxation oscillator, the frequency:", a: "Doubles", c: ["Halves", "Decreases slightly", "Remains constant", "Doubles"], e: "f is inversely proportional to C." },
+            { id: 6, q: "If capacitor value is halved in a PUT relaxation oscillator, the frequency:", a: "Doubles", c: ["Halves", "Decreases slightly", "Remains constant", "Doubles"], e: "f is inversely proportional to C ($f \\propto 1/C$)." },
             { id: 7, q: "A TRIAC in an industrial heater circuit turns ON unintentionally without a gate pulse. The probable cause is:", a: "High dv/dt across TRIAC", c: ["High di/dt", "Low load current", "Low breakover voltage", "High dv/dt across TRIAC"], e: "Rapid voltage rise can trigger the junction capacitance current." },
             { id: 8, q: "To protect TRIAC against voltage surges (e.g., lightning spikes), which device is most suitable?", a: "MOV (Metal Oxide Varistor)", c: ["Fuse", "RC Snubber", "DIAC", "MOV (Metal Oxide Varistor)"], e: "MOVs clamp nonlinear voltage spikes." },
             { id: 9, q: "Which component is typically used across SCR to protect it from high dv/dt?", a: "RC snubber circuit", c: ["Free-wheeling diode", "Varistor", "Fuse", "RC snubber circuit"], e: "RC circuits limit the rate of voltage rise." },
@@ -127,13 +129,15 @@
             { id: 23, q: "The amplitude of the trigger pulse from a UJT relaxation oscillator primarily depends on:", a: "Inter-base voltage", c: ["SCR gate requirement", "Intrinsic ratio η", "Charging resistor value", "Inter-base voltage"], e: "Discharge pulse energy depends on peak voltage, tied to Vbb." },
             { id: 24, q: "The minimum current required to keep SCR conducting immediately after it has just been turned ON is called:", a: "Latching current", c: ["Holding current", "Trigger current", "Peak current", "Latching current"], e: "Latching current maintains state after gate signal removal." },
             { id: 25, q: "If the anode current in an SCR falls below holding current, what happens?", a: "SCR turns OFF", c: ["Gate current increases", "SCR conducts partially", "SCR remains ON", "SCR turns OFF"], e: "Holding current is the sustaining minimum current." },
+
+            // Batch 2 (26-50) - First set of added questions
             { id: 26, q: "Which factor MOSTLY affects the response time of a photodiode?", a: "The capacitance of the depletion layer of the photodiode", c: ["Series resistance of the leads", "The capacitance of the depletion layer of the photodiode", "Ambient temperature only", "Load resistor tolerance"], e: "Depletion layer capacitance limits switching speed." },
             { id: 27, q: "Which filter is characterized by a maximally flat response in the passband?", a: "Butterworth filter", c: ["Chebyshev filter", "Elliptic filter", "Butterworth filter", "Bessel filter"], e: "Butterworth filters provide uniform gain in the passband." },
             { id: 28, q: "What happens to the capacitance of a capacitor if the distance between the plates decreases?", a: "Capacitance increases", c: ["Capacitance decreases", "Capacitance increases", "Capacitance stays the same", "Capacitance becomes zero"], e: "C = εA/d; d and C are inversely proportional." },
             { id: 29, q: "Which factor has the greatest influence on ripple voltage in an unregulated DC power supply?", a: "Size of the filter capacitor", c: ["Transformer turns ratio", "Diode forward voltage", "Size of the filter capacitor", "Wire resistance in the load"], e: "Capacitor size determines the discharge rate between peaks." },
             { id: 30, q: "How many T flip-flops are required to construct a decade (mod-10) counter?", a: "4", c: ["3", "4", "5", "10"], e: "4 bits cover up to 16 states, enough for 10." },
-            { id: 31, q: "Which type of filter is used to eliminate a specific frequency or a narrow range of frequencies?", a: "Notch filter", c: ["Band-pass filter", "Notch filter", "High-pass filter", "All-pass filter"], e: "Notch filters are sharp band-stop filters." },
-            { id: 32, q: "Why do superconductors have no energy loss when conducting electricity?", a: "Because they have zero resistance", c: ["Because current is very small", "Because they have zero resistance", "Because voltage is constant", "Because they operate only at low frequency"], e: "Zero resistance means no power loss." },
+            { id: 31, q: "Which type of filter is used to eliminate a specific frequency or a narrow range of frequencies?", a: "Notch filter", e: "Notch filters are sharp band-stop filters.", c: ["Band-pass filter", "Notch filter", "High-pass filter", "All-pass filter"] },
+            { id: 32, q: "Why do superconductors have no energy loss when conducting electricity?", a: "Because they have zero resistance", c: ["Because current is very small", "Because they have zero resistance", "Because voltage is constant", "Because they operate only at low frequency"], e: "Zero resistance means no power loss ($I^2R = 0$)." },
             { id: 33, q: "What is used to improve the frequency response at high frequencies in an operational amplifier?", a: "Compensation capacitor", c: ["Coupling capacitor", "Bypass capacitor", "Compensation capacitor", "Timing capacitor"], e: "Internal compensation stabilizes high frequency response." },
             { id: 34, q: "What is ladder logic programming in a PLC system?", a: "A graphical or visual representation of controlling processes and equipment", c: ["Machine-level binary", "A graphical representation", "A wiring diagram only", "Simulation waveform"], e: "Visual language based on relay diagrams." },
             { id: 35, q: "Which of the following are optoelectronic devices?", a: "Solar cell, photodiode, LED", c: ["Solar cell, photodiode, LED", "Zener, SCR, TRIAC", "MOSFET, BJT, JFET", "Resistor, capacitor"], e: "Devices interacting with light and electricity." },
@@ -149,18 +153,20 @@
             { id: 45, q: "Which amplifier is preferred for low input impedance and high-frequency applications?", a: "Common Gate FET Amplifier", c: ["Common emitter", "Common collector", "Common Gate FET Amplifier", "Differential"], e: "CG configuration has low impedance and no Miller effect." },
             { id: 46, q: "Which device controls a system’s function using a pre-programmed internal logic?", a: "Programmable Logic Controller (PLC)", c: ["Microprocessor only", "Programmable Logic Controller (PLC)", "Op-amp", "Multiplexer"], e: "PLCs are designed for industrial logic control." },
             { id: 47, q: "Which of the following is an advantage of an SMPS over a linear power supply?", a: "Higher efficiency and lower heat dissipation", c: ["Simpler design", "Higher efficiency and lower heat dissipation", "Lower noise", "Larger size"], e: "Efficiency due to switching vs linear regulation." },
-            { id: 48, q: "What happens to the capacitive reactance Xc as the frequency increases?", a: "It decreases", c: ["It increases", "It decreases", "Remains constant", "Inductive"], e: "Xc is inversely proportional to frequency." },
+            { id: 48, q: "What happens to the capacitive reactance Xc as the frequency increases?", a: "It decreases", c: ["It increases", "It decreases", "Remains constant", "Inductive"], e: "$Xc = 1/(2\pi fC)$." },
             { id: 49, q: "What does Lenz’s Law state about the direction of induced current?", a: "It opposes the change in magnetic flux that produced it", c: ["Flows in same direction", "It opposes the change in magnetic flux that produced it", "Always clockwise", "Depends on coil R"], e: "Law of electromagnetic induction direction." },
             { id: 50, q: "Which of the following is a non-permanent (volatile) memory?", a: "RAM", c: ["EEPROM", "Flash memory", "RAM", "ROM"], e: "RAM loses data when power is off." },
+
+            // Batch 3 (51-75) - Latest set of questions
             { id: 51, q: "In high-frequency analysis of a BJT amplifier, what does the time constant represent?", a: "The charge storage time in the base", c: ["Thermal stability", "The charge storage time in the base", "Collector delay", "Power limit"], e: "Base charge storage limits switching speed." },
             { id: 52, q: "What component is primarily used to stabilize the output voltage of a linear power supply?", a: "Voltage regulator", c: ["Bridge rectifier", "Voltage regulator", "Filter inductor", "Isolation transformer"], e: "Regulators hold voltage constant under load." },
             { id: 53, q: "Which logic gate can be used to implement all other basic logic gates?", a: "NAND gate", c: ["XOR gate", "NOR gate", "NAND gate", "AND gate"], e: "NAND is a universal gate." },
             { id: 54, q: "Which design tool helps in project planning and implementation by illustrating the steps a program must follow?", a: "Flowchart", c: ["Timing diagram", "Flowchart", "Block diagram", "Truth table"], e: "Flowcharts map procedural logic." },
             { id: 55, q: "What is the primary function of a varistor in an electrical circuit?", a: "To regulate voltage by changing resistance with voltage", c: ["Store charge", "Regulate voltage by changing resistance with voltage", "Amplify signals", "Constant current"], e: "Non-linear resistance for surge protection." },
             { id: 56, q: "Which transistor terminal controls the flow of current between the other two terminals?", a: "Base", c: ["Collector", "Base", "Emitter", "Substrate"], e: "Base current regulates collector-emitter current." },
-            { id: 57, q: "What happens to the output impedance of a BJT amplifier if the collector resistance increases?", a: "It increases", c: ["It decreases", "It increases", "It remains constant", "It becomes zero"], e: "Zout is roughly parallel to Rc." },
+            { id: 57, q: "What happens to the output impedance of a BJT amplifier if the collector resistance increases?", a: "It increases", c: ["It decreases", "It increases", "It remains constant", "It becomes zero"], e: "Zout is proportional to Rc in parallel with ro." },
             { id: 58, q: "What is commonly used to cool superconductors to their critical temperature?", a: "Liquid nitrogen", c: ["Dry ice", "Liquid nitrogen", "Distilled water", "Mineral oil"], e: "Used for high-temp superconductivity cooling." },
-            { id: 59, q: "What is the primary advantage of using a Schottky diode over silicon diodes?", a: "Lower conduction losses", c: ["Higher breakdown", "Lower conduction losses", "Larger junction C", "Higher reverse leakage"], e: "Low forward voltage drop." },
+            { id: 59, q: "What is the primary advantage of using a Schottky diode over silicon diodes?", a: "Lower conduction losses", c: ["Higher breakdown", "Lower conduction losses", "Larger junction C", "Higher reverse leakage"], e: "Low forward voltage drop ($0.3V$)." },
             { id: 60, q: "Which type of memory is built into the chip but is not classified as a register?", a: "Cache memory", c: ["RAM", "Cache memory", "EEPROM", "Virtual memory"], e: "On-chip SRAM for data caching." },
             { id: 61, q: "What is the instruction set of the microprocessor that is converted into binary?", a: "Machine language", c: ["Assembly", "Machine language", "High-level", "Microcode comments"], e: "The raw binary executed by hardware." },
             { id: 62, q: "What is the normal operating condition of the base-emitter diode in a Bipolar Junction Transistor (BJT)?", a: "Forward-biased", c: ["Reverse-biased", "Forward-biased", "Zero-biased", "Alternately biased"], e: "Required for active and saturation regions." },
@@ -168,64 +174,15 @@
             { id: 64, q: "The Ampere-Maxwell Law modifies Ampere’s Law by adding which term?", a: "Electric displacement current", c: ["Magnetic flux density", "Electric displacement current", "Conduction density", "Permeability"], e: "Maxwell added displacement current for capacitors." },
             { id: 65, q: "How does a 2-input NAND gate determine its output based on the given inputs?", a: "The output is 1 when both inputs are 0", c: ["Output is 1 when any input is 1", "Output is 1 only when both inputs are 1", "The output is 1 when both inputs are 0", "Complement of AND"], e: "NAND output is high unless both inputs are high." },
             { id: 66, q: "A JK flip-flop with inputs J and K tied together operates as:", a: "T flip-flop", c: ["SR flip-flop", "T flip-flop", "D flip-flop", "Master-slave"], e: "Toggle behavior when J=K." },
-            { id: 67, q: "According to Gauss’s Law for electricity (Maxwell’s first equation), the electric field is directly related to which of the following?", a: "Free charge distribution", c: ["Magnetic density", "Free charge distribution", "Electric potential", "Current density"], e: "Net flux through closed surface depends on enclosed charge." },
-            { id: 68, q: "Which type of memory can be re-written but must be physically removed from the circuit for erasure and reprogramming?", a: "EPROM", c: ["Flash", "EEPROM", "EPROM", "SRAM"], e: "Classic erasable PROMs used UV light." },
-            { id: 69, q: "Which type of flip-flop is used to construct a 4-bit ring counter?", a: "D flip-flop", c: ["D flip-flop", "JK flip-flop", "T flip-flop", "SR latch"], e: "Shift register logic uses D flip-flops." },
+            { id: 67, q: "According to Gauss’s Law for electricity (Maxwell’s first equation), the electric field is directly related to which of the following?", a: "Free charge distribution", c: ["Magnetic density", "Free charge distribution", "Electric potential", "Current density"], e: "$\nabla \cdot E = \rho/\epsilon_0$." },
+            { id: 68, q: "Which type of memory can be re-written but must be physically removed from the circuit for erasure and reprogramming?", a: "EEPROM", c: ["Flash", "EEPROM", "EPROM", "SRAM"], e: "Classic EEPROM (Electrically Erasable Programmable Read-Only Memory)." },
+            { id: 69, q: "Which type of flip-flop is used to construct a 4-bit ring counter?", a: "T flip-flop", c: ["D flip-flop", "JK flip-flop", "T flip-flop", "SR latch"], e: "Often used for toggle or shift logic in counters." },
             { id: 70, q: "Which system provides instructions to the computer during the boot-up process?", a: "Basic Input/Output System", c: ["OS kernel", "Basic Input/Output System", "Firmware", "Device driver"], e: "BIOS initializes hardware during boot." },
             { id: 71, q: "The output of an XOR gate equals one when:", a: "Inputs are different", c: ["Both inputs 0", "Both inputs 1", "Inputs are different", "Inputs inverted"], e: "High output for unique inputs." },
             { id: 72, q: "What happens to the voltage gain of an amplifier under no-load condition (open circuit) and zero source resistance (Rs = 0)?", a: "It is at its highest value", c: ["It becomes zero", "It decreases significantly", "It is at its highest value", "It oscillates"], e: "Gain is maximum when not loaded." },
             { id: 73, q: "A transistor is in saturation mode when:", a: "The transistor is fully conductive between emitter and collector", c: ["BE reverse biased", "The transistor is fully conductive", "Only leakage flows", "Collector current 0"], e: "Fully ON state." },
             { id: 74, q: "What is the primary application of a Uni-Junction Transistor (UJT)?", a: "Oscillator and triggering circuits", c: ["Voltage regulation", "Oscillator and triggering circuits", "Power amplification", "Frequency multiplication"], e: "Used for timing and pulse triggering." },
-            { id: 75, q: "Which component is used to vary the measurement of resistance in a circuit?", a: "Rheostat", c: ["Potentiometer", "Thermistor", "Rheostat", "Varistor"], e: "Two-terminal variable resistor." },
-            { id: 76, q: "A series circuit consists of a battery with internal resistance r and an external resistor R. If r = R, the thermal energy generated per unit time by the internal resistance is:", a: "The same as that generated by R", c: ["Half that generated by R", "Twice that generated by R", "The same as that generated by R", "Zero"], e: "P=I²R. Same I and same R means same power." },
-            { id: 77, q: "Two resistances of 10 Ω and 15 Ω are connected in parallel and then in series with a 5-Ω resistor. The combination is connected to a 12-V battery. What are the current and total power?", a: "1.09 A, 13.08 W", c: ["0.80 A, 9.6 W", "1.09 A, 13.08 W", "1.50 A, 18 W", "2.00 A, 24 W"], e: "Rtotal = (10||15)+5 = 11. I=12/11. P=VI." },
-            { id: 78, q: "Two 110-V light bulbs rated at 25 W and 100 W are connected in series to a 110-V source. Then:", a: "None of the choices", c: ["The 25-W bulb glows brighter", "The 100-W bulb glows brighter", "Both glow at rated power", "None of the choices"], e: "Voltage is divided; neither hit rated power." },
-            { id: 79, q: "If one of the resistors in a parallel circuit is removed, the total resistance:", a: "Increases", c: ["Decreases", "Remains unchanged", "Increases", "Becomes zero"], e: "Less paths mean higher resistance." },
-            { id: 80, q: "A Thevenin equivalent circuit consists of:", a: "A voltage source in series with a resistance", c: ["A current source in parallel with a resistance", "A voltage source in series with a resistance", "Only a voltage source", "Only a resistance"], e: "Vth and Rth in series." },
-            { id: 81, q: "Kirchhoff’s current law states that:", a: "The algebraic sum of the currents entering and leaving any point in a circuit must equal zero", c: ["The total current in a loop is constant", "Voltage drops equal voltage rises", "The algebraic sum of currents at a junction is zero", "The algebraic sum of the currents entering and leaving any point in a circuit must equal zero"], e: "Nodal conservation of charge." },
-            { id: 82, q: "A power station supplies 60 kW to a load at 600 V. Determine the load current.", a: "108 A", c: ["80 A", "100 A", "108 A", "120 A"], e: "P = VI -> I = 60000/600 = 100A." },
-            { id: 83, q: "When solving for the Thevenin equivalent resistance Rth:", a: "All voltage sources must be short-circuited", c: ["All current sources must be opened", "All voltage sources must be short-circuited", "All resistors must be removed", "The load resistance must be included"], e: "Deactivate sources: V becomes short, I becomes open." },
-            { id: 84, q: "Two wires of the same material and length but different diameters are connected in series to a battery. Which quantity is the same for both wires?", a: "The current", c: ["Resistance", "Voltage drop", "Power dissipation", "The current"], e: "Series current is uniform." },
-            { id: 85, q: "The output of a voltage divider is 9 V with no load. When a load is connected, the output voltage:", a: "Decreases", c: ["Increases", "Remains constant", "Decreases", "Becomes zero"], e: "Loading effects reduce output voltage." },
-            { id: 86, q: "In the context of loop and junction rules, a junction is a point:", a: "Where three or more wires are joined", c: ["Where voltage is measured", "Where current reverses direction", "Where three or more wires are joined", "Where resistance is zero"], e: "Definition of a circuit node." },
-            { id: 87, q: "A 220-Ω, 2.2-kΩ, and 200-Ω resistor are connected across 15 V. What happens to the equivalent resistance if the voltage is doubled to 30 V?", a: "R_EQ does not change", c: ["It doubles", "It halves", "It changes proportionally", "R_EQ does not change"], e: "R is a constant property." },
-            { id: 88, q: "Nine identical wires each of diameter d and length L are connected in series. The equivalent resistance equals that of a single wire of length L and diameter:", a: "d/3", c: ["3d", "d/3", "d/9", "9d"], e: "9R requires area/9, so d/3." },
-            { id: 89, q: "When an additional resistor is connected across an existing parallel circuit, the total resistance:", a: "Decreases", c: ["Increases", "Remains constant", "Decreases", "Becomes infinite"], e: "Parallel addition reduces total R." },
-            { id: 90, q: "A constant-voltage source ideally:", a: "Has very low internal resistance", c: ["Has high internal resistance", "Has very low internal resistance", "Delivers constant current", "Produces zero power loss"], e: "Ideal V-source has 0 ohm internal resistance." },
-            { id: 91, q: "Resistor 1 has twice the resistance of resistor 2. They are connected in parallel and a fixed voltage is applied. The rate of thermal energy generation in resistor 1 is:", a: "Half that in resistor 2", c: ["Twice that in resistor 2", "Equal to that in resistor 2", "Half that in resistor 2", "Four times that in resistor 2"], e: "P = V²/R. Inverse relationship." },
-            { id: 92, q: "A complete short develops across one of five parallel resistors on a PC board. The most likely result is:", a: "The fuse in the power supply will blow", c: ["All resistors burn out", "The fuse in the power supply will blow", "The voltage increases", "The current becomes zero"], e: "Short circuit causes overcurrent." },
-            { id: 93, q: "Kirchhoff’s voltage law states that:", a: "The algebraic sum of the voltage sources and IR voltage drops in any closed path must total zero", c: ["Current is the same everywhere", "Power is conserved in a loop", "The algebraic sum of voltages in any closed loop is zero", "The algebraic sum of the voltage sources and IR voltage drops in any closed path must total zero"], e: "KVL loop rule." },
-            { id: 94, q: "A battery is connected across two identical resistors in series. If the battery voltage is V and current is i, then:", a: "The potential difference across each resistor is V/2 and the current in each resistor is i", c: ["Each resistor has voltage V", "The potential difference across each resistor is V/2 and the current in each resistor is i", "Current splits equally", "Voltage depends on resistance"], e: "Equal resistors split V." },
-            { id: 95, q: "In a series circuit, the largest resistance has:", a: "The largest voltage drop", c: ["The smallest voltage drop", "The largest voltage drop", "The greatest current", "Zero power dissipation"], e: "V=IR; proportional in series." },
-            { id: 96, q: "Resistor 1 has twice the resistance of resistor 2 and they are connected in series. Which statement is correct?", a: "The potential difference across 1 is twice that across 2", c: ["Current through R₁ is twice that of R₂", "Voltage across R₁ is half that across R₂", "The potential difference across 1 is twice that across 2", "Power dissipated is equal"], e: "Voltage is proportional to R in series." },
-            { id: 97, q: "Kirchhoff's current law states that:", a: "The algebraic sum of the currents entering and leaving any point in a circuit must equal zero", c: ["The total current in a loop is constant", "Voltage drops equal voltage rises", "The algebraic sum of currents at a junction is zero", "The algebraic sum of the currents entering and leaving any point in a circuit must equal zero"], e: "Repeating for logic check." },
-            
-            // --- NEW 25 QUESTIONS ---
-            { id: 98, q: "What is a common disadvantage of a cascaded amplifier configuration?", a: "Increased noise and potential complexity issues", c: ["Reduced bandwidth only", "Increased noise and potential complexity issues", "Lower voltage gain", "Increased input impedance only"], e: "Each stage adds noise and phase shift." },
-            { id: 99, q: "Why do MOSFETs have higher input impedance compared to BJTs?", a: "Because MOSFETs operate with essentially no input current", c: ["Because MOSFETs operate at higher voltages", "Because MOSFETs have larger junction areas", "Because MOSFETs operate with essentially no input current", "Because MOSFETs have lower output resistance"], e: "The SiO2 layer prevents DC gate current." },
-            { id: 100, q: "What factors determine the frequency response of an operational amplifier?", a: "The open-loop gain and the bandwidth", c: ["Input offset voltage and slew rate", "The open-loop gain and the bandwidth", "The supply voltage only", "Output current capability"], e: "Linked to the internal compensation capacitor." },
-            { id: 101, q: "What is the typical input impedance of an ideal operational amplifier?", a: "Very high (approaching infinity)", c: ["Very low", "Moderate", "Very high (approaching infinity)", "Equal to output impedance"], e: "Ideal op-amps draw no current from the source." },
-            { id: 102, q: "Which type of oscillator relies on a positive feedback loop to maintain continuous oscillations?", a: "Hartley oscillator", c: ["Wien bridge oscillator", "Hartley oscillator", "RC phase-shift oscillator", "Crystal oscillator"], e: "Hartley uses an inductive divider in the feedback." },
-            { id: 103, q: "What primarily causes the high-frequency response limitation of a BJT amplifier?", a: "The collector-emitter capacitance", c: ["Base resistance", "Collector-emitter capacitance", "Load resistance", "Supply ripple"], e: "Internal junction capacitances short high frequencies to ground." },
-            { id: 104, q: "What is used to improve bandwidth and reduce distortion in an amplifier circuit?", a: "Feedback", c: ["Positive feedback", "Feedback", "Higher supply voltage", "Larger coupling capacitors"], e: "Specifically negative feedback." },
-            { id: 105, q: "What device is used to step up DC voltage without using a transformer?", a: "Voltage multiplier circuit", c: ["Zener regulator", "Voltage multiplier circuit", "Switching transformer", "Linear regulator"], e: "Uses diodes and capacitors in a ladder." },
-            { id: 106, q: "Which of the following primarily determines the cutoff frequency of a common-emitter BJT amplifier?", a: "III and IV", c: ["I and II", "II and III", "III and IV", "I, III, and IV"], e: "Intrinsic (internal) and external (coupling/bypass) capacitors define the range." },
-            { id: 107, q: "In an inverting configuration of an op-amp, the output voltage is ______ the input voltage.", a: "Inversely proportional to", c: ["Directly proportional to", "Equal to", "Inversely proportional to", "Independent of"], e: "Vout = -Vin(Rf/Ri)." },
-            { id: 108, q: "What component in a BJT amplifier circuit provides negative feedback and helps stabilize the gain?", a: "Emitter resistor", c: ["Collector resistor", "Base capacitor", "Emitter resistor", "Coupling capacitor"], e: "Unbypassed Re stabilizes the operating point." },
-            { id: 109, q: "In an active low-pass filter, the cutoff frequency is achieved when the output voltage is ___ of the input voltage.", a: "70.7%", c: ["50%", "63.2%", "70.7%", "90%"], e: "Defined as the -3dB point (1/√2)." },
-            { id: 110, q: "Which of the following are used to determine the input impedance of a common-source MOSFET amplifier?", a: "Gate-to-source capacitance and input resistance", c: ["Drain resistance and supply voltage", "Gate-to-source capacitance and input resistance", "Load resistance only", "Channel length and temperature"], e: "MOSFET input is almost purely capacitive." },
-            { id: 111, q: "What happens to the bandwidth of an operational amplifier when negative feedback is applied?", a: "Bandwidth increases", c: ["Decreases significantly", "Remains constant", "Bandwidth increases", "Becomes unpredictable"], e: "Gain decreases but bandwidth extends." },
-            { id: 112, q: "What is the primary function of an inverter?", a: "Convert DC to AC", c: ["Convert AC to DC", "Convert DC to AC", "Amplify AC signals", "Regulate voltage"], e: "Used in UPS and solar systems." },
-            { id: 113, q: "In a BJT, the majority charge carriers in an NPN transistor are:", a: "Electrons in the emitter and holes in the base", c: ["Holes in emitter and collector", "Electrons in the emitter and holes in the base", "Electrons in emitter and collector", "Holes in base and collector"], e: "Emitter is heavily doped with electrons." },
-            { id: 114, q: "When a BJT operates in the active region, the base-emitter junction is ______-biased while the collector-base junction is ______-biased.", a: "Forward, reverse", c: ["Reverse, reverse", "Forward, forward", "Forward, reverse", "Reverse, forward"], e: "The standard bias condition for amplification." },
-            { id: 115, q: "What is the main reason why a PIN photodiode is used for high-speed optical communications?", a: "It reduces transit time", c: ["Higher breakdown voltage", "Lower dark current", "Reduced transit time", "Higher gain"], e: "Intrinsic layer increases the depletion width." },
-            { id: 116, q: "What effect do coupling and bypass capacitors have on the cutoff frequency of a common-emitter BJT amplifier?", a: "They decrease the cutoff frequency by allowing more low frequencies to pass", c: ["Increase cutoff frequency", "Eliminate high-frequency response", "They decrease the cutoff frequency by allowing more low frequencies to pass", "Have no effect"], e: "Large capacitors reduce reactance at lower frequencies." },
-            { id: 117, q: "What is a primary advantage of a cascaded amplifier configuration?", a: "Increased overall gain", c: ["Reduced noise", "Increased overall gain", "Lower bandwidth", "Simpler design"], e: "Total gain is the product of individual stage gains." },
-            { id: 118, q: "What determines the dominant pole frequency in a BJT amplifier’s frequency response?", a: "The internal capacitance", c: ["External load resistance", "Supply voltage", "Internal capacitance", "Base bias resistor"], e: "Internal capacitances (like Cbc) usually define the limit." },
-            { id: 119, q: "Which characteristic of MOSFETs contributes most to their high input impedance?", a: "The absence of a gate current due to the insulating oxide layer", c: ["High carrier mobility", "The absence of a gate current due to the insulating oxide layer", "Low drain resistance", "Small channel length"], e: "The SiO2 layer is a near-perfect insulator." },
-            { id: 120, q: "What is the main function of the active region in a BJT?", a: "To allow the transistor to amplify signals", c: ["Switching", "Amplification of signals", "Voltage regulation", "Power dissipation"], e: "Active region = Amplification; Saturation/Cutoff = Switching." },
-            { id: 121, q: "What is defined as the ratio of the differential gain to the common-mode gain of an amplifier?", a: "Common Mode Rejection Ratio (CMRR)", c: ["Slew rate", "Gain-bandwidth product", "Common Mode Rejection Ratio (CMRR)", "Input offset voltage"], e: "Measures ability to reject interference." },
-            { id: 122, q: "Operational amplifiers are usually used with negative feedback to:", a: "Improve stability and reduce distortion", c: ["Increase distortion", "Increase power consumption", "Improve stability and reduce distortion", "Reduce bandwidth drastically"], e: "Negative feedback sacrifices gain for linear behavior." }
+            { id: 75, q: "Which component is used to vary the measurement of resistance in a circuit?", a: "Rheostat", c: ["Potentiometer", "Thermistor", "Rheostat", "Varistor"], e: "A two-terminal variable resistor for current control." }
         ];
 
         let questions = [];
@@ -241,7 +198,7 @@
         }
 
         function startQuiz(shuffle) {
-            questions = JSON.parse(JSON.stringify(originalPool));
+            questions = JSON.parse(JSON.stringify(rawQuestions));
             if (shuffle) shuffleArray(questions);
             currentIndex = 0; score = 0; userResponses = {};
             document.getElementById('landing-screen').classList.add('hidden');
@@ -260,17 +217,26 @@
 
         function previousQuestion() { if (currentIndex > 0) { currentIndex--; showQuestion(); } }
 
+        function shuffleRemaining() {
+            if (userResponses[questions[currentIndex].id]) return;
+            const remaining = questions.slice(currentIndex);
+            shuffleArray(remaining);
+            questions.splice(currentIndex, remaining.length, ...remaining);
+            showQuestion();
+        }
+
         function showQuestion() {
             const q = questions[currentIndex];
             const total = questions.length;
-            document.getElementById('progress').style.width = `${((currentIndex) / total) * 100}%`;
+            document.getElementById('progress').style.width = `${(currentIndex / total) * 100}%`;
             document.getElementById('score-display').innerText = `Score: ${score}/${total}`;
             document.getElementById('prev-btn').disabled = (currentIndex === 0);
-            document.getElementById('question-text').textContent = `${currentIndex + 1}. ${q.q}`;
+            document.getElementById('question-text').textContent = q.q;
             
             const container = document.getElementById('options-container');
             container.innerHTML = '';
 
+            // Get choices and shuffle them once
             if (!q.shuffledChoices) {
                 q.shuffledChoices = [...q.c];
                 shuffleArray(q.shuffledChoices);
@@ -306,7 +272,7 @@
         function showExplanation(isCorrect) {
             const q = questions[currentIndex];
             const fb = document.getElementById('feedback-label');
-            fb.innerText = isCorrect ? "Excellent! ✨" : "Not quite.";
+            fb.innerText = isCorrect ? "Correct! ✨" : "Incorrect";
             fb.className = isCorrect ? "font-bold text-lg text-green-600" : "font-bold text-lg text-red-600";
             document.getElementById('explanation-text').innerText = q.e;
             document.getElementById('explanation-container').classList.remove('hidden');
@@ -323,7 +289,7 @@
             document.getElementById('results-screen').classList.remove('hidden');
             document.getElementById('final-score').innerText = `${score}/${questions.length}`;
             const pct = (score / questions.length) * 100;
-            document.getElementById('result-message').innerText = pct >= 85 ? "You're ready for the board exam!" : "Great practice session. Review your mistakes below.";
+            document.getElementById('result-message').innerText = pct >= 80 ? "Great job!" : "Keep studying!";
         }
 
         function showReview() {
@@ -336,16 +302,12 @@
                 if (res && !res.isCorrect) {
                     const card = document.createElement('div');
                     card.className = 'glass-card p-6 text-left border-l-8 border-red-400';
-                    card.innerHTML = `<div class="font-bold text-lg mb-2">${q.q}</div>
-                        <div class="space-y-1">
-                            <div class="text-red-500 font-medium">Your answer: ${res.choice}</div>
-                            <div class="text-green-600 font-bold">Correct answer: ${q.a}</div>
-                            <div class="mt-4 p-3 bg-purple-50 rounded-lg text-sm text-gray-600">Note: ${q.e}</div>
-                        </div>`;
+                    card.innerHTML = `<div class="font-bold text-lg">${q.q}</div>
+                        <div class="text-sm"><span class="text-red-500">You: ${res.choice}</span><br>
+                        <span class="text-green-600 font-bold">Correct: ${q.a}</span></div>`;
                     list.appendChild(card);
                 }
             });
-            if (list.innerHTML === '') list.innerHTML = '<div class="glass-card p-8 text-center text-xl font-bold text-green-600">Perfect Score! No mistakes to review. 🌟</div>';
         }
 
         function goBack() {
