@@ -619,16 +619,31 @@ let currentIndex = 0;
 let score = 0;
 let userResponses = {};
 
-function startQuiz() {
+/* ---------- Shuffle Utility ---------- */
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+/* ---------- Start Quiz ---------- */
+function startQuiz(shuffle=false) {
     questions = JSON.parse(JSON.stringify(rawQuestions));
+    if (shuffle) shuffleArray(questions);
+
     currentIndex = 0;
     score = 0;
     userResponses = {};
+
     document.getElementById('landing-screen').classList.add('hidden');
+    document.getElementById('results-screen').classList.add('hidden');
     document.getElementById('quiz-screen').classList.remove('hidden');
+
     showQuestion();
 }
 
+/* ---------- Show Question ---------- */
 function showQuestion() {
     const q = questions[currentIndex];
     const total = questions.length;
@@ -644,29 +659,73 @@ function showQuestion() {
     const container = document.getElementById('options-container');
     container.innerHTML = "";
 
+    const previousResponse = userResponses[q.id];
+
     q.c.forEach(choice => {
         const btn = document.createElement("button");
         btn.className = "option-btn glass-card p-3";
         btn.innerText = choice;
-        btn.onclick = () => handleAnswer(choice);
+
+        if (previousResponse) {
+            btn.disabled = true;
+
+            if (choice === q.a) {
+                btn.classList.add("correct");
+            }
+
+            if (choice === previousResponse && choice !== q.a) {
+                btn.classList.add("incorrect");
+            }
+
+        } else {
+            btn.onclick = () => handleAnswer(choice);
+        }
+
         container.appendChild(btn);
     });
 
     document.getElementById('explanation-container').classList.add('hidden');
 }
 
+/* ---------- Handle Answer ---------- */
 function handleAnswer(choice) {
     const q = questions[currentIndex];
-    const isCorrect = choice === q.a;
-    if (isCorrect) score++;
+
+    // prevent changing answer
+    if (userResponses[q.id]) return;
+
+    userResponses[q.id] = choice;
+
+    if (choice === q.a) score++;
+
+    showCorrectImmediately();
+}
+
+/* ---------- Show Correct Immediately ---------- */
+function showCorrectImmediately() {
+    const q = questions[currentIndex];
+    const container = document.getElementById('options-container');
+
+    [...container.children].forEach(btn => {
+        btn.disabled = true;
+
+        if (btn.innerText === q.a) {
+            btn.classList.add("correct");
+        }
+
+        if (btn.innerText === userResponses[q.id] && btn.innerText !== q.a) {
+            btn.classList.add("incorrect");
+        }
+    });
 
     document.getElementById('feedback-label').innerText =
-        isCorrect ? "Correct! ✨" : "Incorrect";
+        userResponses[q.id] === q.a ? "Correct! ✨" : "Incorrect";
 
     document.getElementById('explanation-text').innerText = q.e;
     document.getElementById('explanation-container').classList.remove('hidden');
 }
 
+/* ---------- Next ---------- */
 function nextQuestion() {
     currentIndex++;
     if (currentIndex < questions.length) {
@@ -676,6 +735,15 @@ function nextQuestion() {
     }
 }
 
+/* ---------- Previous (No Changing Answers) ---------- */
+function previousQuestion() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        showQuestion();
+    }
+}
+
+/* ---------- Show Results ---------- */
 function showResults() {
     document.getElementById('quiz-screen').classList.add('hidden');
     document.getElementById('results-screen').classList.remove('hidden');
@@ -683,11 +751,13 @@ function showResults() {
         score + "/" + questions.length;
 }
 
+/* ---------- Reset ---------- */
 function resetQuiz() {
     document.getElementById('results-screen').classList.add('hidden');
     document.getElementById('landing-screen').classList.remove('hidden');
 }
 
+/* ---------- Go Back ---------- */
 function goBack() {
     document.getElementById('quiz-screen').classList.add('hidden');
     document.getElementById('landing-screen').classList.remove('hidden');
